@@ -1,23 +1,23 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import type { Metadata } from "next";
+import "./globals.css";
+import { WalletProvider } from "@/context/WalletContext";
 
 export const metadata: Metadata = {
-  title: 'ReliefMesh - Decentralized Disaster Relief',
-  description: 'A decentralized disaster relief platform on Stellar Soroban with SMS integration.',
-}
+  title: "ReliefMesh — Decentralized Disaster Relief on Stellar",
+  description:
+    "Bypass broken banks. Send digital aid directly to disaster victims via SMS. Powered by Stellar blockchain.",
+};
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
-      <body className="antialiased font-serif-italic font-serif-bold label-text">
-        <main className="min-h-screen">
-          {children}
-        </main>
+      <body>
+        <WalletProvider>{children}</WalletProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -1,0 +1,100 @@
+"use client"
+
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { LayoutDashboard, Globe, Users, Store, Zap } from 'lucide-react';
+import { useWallet } from '@/context/WalletContext';
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname();
+  const { connected, publicKey, usdcBalance } = useWallet();
+
+  const navItems = [
+    { href: "/dashboard", icon: LayoutDashboard, label: "Overview" },
+    { href: "/dashboard/distribute", icon: Globe, label: "Distribute Aid" },
+    { href: "/dashboard/victims", icon: Users, label: "Victims" },
+    { href: "/dashboard/shopkeepers", icon: Store, label: "Shopkeepers" },
+    { href: "/dashboard/clawback", icon: Zap, label: "Clawback" },
+  ];
+
+  return (
+    <div className="flex h-screen bg-[var(--bg-primary)] overflow-hidden">
+      {/* LEFT SIDEBAR (desktop) */}
+      <aside className="hidden md:flex w-[260px] bg-[rgba(10,10,10,0.9)] border-r border-[var(--border-subtle)] flex-col">
+        <div className="p-6">
+          <Link href="/" className="font-display font-bold italic text-white text-2xl block mb-2 tracking-wide">
+            ReliefMesh
+          </Link>
+          <div className="label-text text-[9px] opacity-70">Charity Command Center</div>
+        </div>
+
+        <nav className="flex-1 mt-6">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 px-6 py-3 transition-colors ${
+                  isActive 
+                    ? "text-[var(--gold)] border-l-2 border-[var(--gold)] bg-[var(--bg-glass)]" 
+                    : "text-gray-400 hover:text-white hover:bg-[var(--bg-glass-hover)] border-l-2 border-transparent"
+                }`}
+              >
+                <Icon size={20} className={isActive ? "text-[var(--gold)]" : "text-gray-400"} />
+                <span className="font-body text-sm font-medium">{item.label}</span>
+              </Link>
+            )
+          })}
+        </nav>
+
+        <div className="p-6 mt-auto">
+          <div className="glass-card px-4 py-3 bg-[var(--bg-elevated)]">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <div className={`status-dot ${connected ? 'status-dot-green' : 'status-dot-red'}`}></div>
+                <span className="text-xs text-white truncate max-w-[150px]">
+                  {connected && publicKey ? publicKey : "Not Connected"}
+                </span>
+              </div>
+              <div className="text-[var(--gold)] font-bold text-sm tracking-widest">
+                ${usdcBalance} USDC
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* MOBILE: Bottom tab bar */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[var(--bg-secondary)] border-t border-[var(--border-subtle)] z-50 flex justify-around items-center px-2">
+         {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex flex-col items-center justify-center w-full h-full p-2 ${isActive ? "text-[var(--gold)]" : "text-gray-500"}`}
+              >
+                <Icon size={20} className="mb-1" />
+                <span className="text-[9px] font-medium leading-none">{item.label}</span>
+              </Link>
+            )
+          })}
+      </nav>
+
+      {/* MAIN CONTENT */}
+      <main className="flex-1 flex flex-col h-screen overflow-y-auto w-full relative z-0">
+         <div className="p-4 md:p-8 pb-24 md:pb-8 max-w-7xl mx-auto w-full">
+            {children}
+         </div>
+      </main>
+    </div>
+  );
+}

@@ -22,6 +22,7 @@ interface WalletState {
   connectManual: (key: string) => void;
   disconnect: () => void;
   refreshBalance: () => Promise<void>;
+  signTransaction: (xdr: string) => Promise<string>;
 }
 
 const WalletContext = createContext<WalletState | undefined>(undefined);
@@ -73,6 +74,28 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       await getBalances(publicKey);
     }
   }, [publicKey, getBalances]);
+
+  /* ── Sign Transaction ────────────────────────────────────────────────── */
+  const signTransaction = useCallback(
+    async (xdr: string) => {
+      const win = window as any;
+      if (walletType === "freighter") {
+        return await win.freighterApi.signTransaction({
+          xdr,
+          network: "TESTNET",
+        });
+      } else if (walletType === "albedo") {
+        const result = await win.albedo.tx({
+          xdr,
+          network: "testnet",
+        });
+        return result.signed_envelope;
+      } else {
+        throw new Error("Signing not supported for this wallet type");
+      }
+    },
+    [walletType]
+  );
 
   /* ── Freighter ────────────────────────────────────────────────────────── */
   const connectFreighter = useCallback(async () => {
@@ -181,6 +204,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         connectManual,
         disconnect,
         refreshBalance,
+        signTransaction,
       }}
     >
       {children}

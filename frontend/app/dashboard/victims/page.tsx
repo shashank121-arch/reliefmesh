@@ -1,9 +1,74 @@
 "use client"
 import React, { useState } from 'react';
-import { Lock, Search, PlusCircle } from 'lucide-react';
+import { Lock, Search, PlusCircle, Loader2 } from 'lucide-react';
+import { useWallet } from '@/context/WalletContext';
+import { invokeContract } from '@/lib/stellar';
+
+async function hashData(data: string) {
+  const encoder = new TextEncoder();
+  const dataUint8 = encoder.encode(data);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", dataUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+}
 
 export default function VictimsPage() {
+  const { publicKey, signTransaction } = useWallet();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Form State
+  const [phone, setPhone] = useState('');
+  const [nationalId, setNationalId] = useState('');
+  const [disaster, setDisaster] = useState('kerala2025');
+  const [location, setLocation] = useState('');
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!publicKey) {
+      alert("Please connect your wallet first");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // 1. Generate hashes locally (ZK Identity protection)
+      const phoneHash = await hashData(phone);
+      const identityHash = await hashData(nationalId);
+      
+      // 2. Generate a readable victim ID (random or derive from partial hash)
+      const victimId = `VIC-${identityHash.substring(0, 8).toUpperCase()}`;
+
+      // 3. Contract Invoke
+      const result = await invokeContract({
+        contractId: process.env.NEXT_PUBLIC_VICTIM_REGISTRY_CONTRACT_ID!,
+        method: 'register_victim',
+        args: [
+           publicKey, // admin address
+           victimId,
+           identityHash,
+           phoneHash,
+           disaster
+        ],
+        publicKey,
+        signTransaction
+      });
+
+      if (result.success) {
+        alert("Victim registered successfully!");
+        setIsModalOpen(false);
+        // Reset form
+        setPhone('');
+        setNationalId('');
+        setLocation('');
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -29,6 +94,7 @@ export default function VictimsPage() {
         <select className="glass-select md:w-48">
           <option>All Disasters</option>
           <option>Kerala Flood 2025</option>
+          <option>Turkey Quake Relief</option>
         </select>
         <select className="glass-select md:w-48">
           <option>All Status</option>
@@ -73,42 +139,75 @@ export default function VictimsPage() {
           <div className="modal-card glass-card gold-border animate-modal-in" onClick={e => e.stopPropagation()}>
              <h2 className="font-display italic text-3xl mb-6">Register New Victim</h2>
              
-             <form className="space-y-5">
-               <div>
-                 <label className="block text-sm font-medium text-gray-300 mb-1">Disaster Operation</label>
-                 <select className="glass-select"><option>Kerala Flood 2025</option></select>
-               </div>
-               
-               <div>
-                 <label className="block text-sm font-medium text-gray-300 mb-1">Phone Number (SMS Recipient)</label>
-                 <input type="tel" className="glass-input" placeholder="+91 98765 43210" />
-                 <p className="text-xs text-gray-500 mt-1 pl-1">Will be hashed (SHA-256) before on-chain storage.</p>
-               </div>
+             <form className="space-y-5" onSubmit={handleRegister}>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Disaster Operation</label>
+                  <select 
+                    className="glass-select"
+                    value={disaster}
+                    onChange={(e) => setDisaster(e.target.value)}
+                  >
+                    <option value="kerala2025">Kerala Flood 2025</option>
+                    <option value="turkey2024">Turkey Quake Relief</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Phone Number (SMS Recipient)</label>
+                  <input 
+                    type="tel" 
+                    className="glass-input" 
+                    placeholder="+91 98765 43210" 
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                  <p className="text-xs text-gray-500 mt-1 pl-1">Will be hashed (SHA-256) before on-chain storage.</p>
+                </div>
 
-               <div>
-                 <label className="block text-sm font-medium text-gray-300 mb-1">National ID / Passport</label>
-                 <input type="text" className="glass-input" placeholder="Enter ID number" />
-                 <p className="text-xs text-gray-500 mt-1 pl-1">Will be bundled into a ZK commitment hash.</p>
-               </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">National ID / Passport</label>
+                  <input 
+                    type="text" 
+                    className="glass-input" 
+                    placeholder="Enter ID number" 
+                    required
+                    value={nationalId}
+                    onChange={(e) => setNationalId(e.target.value)}
+                  />
+                  <p className="text-xs text-gray-500 mt-1 pl-1">Will be bundled into a ZK commitment hash.</p>
+                </div>
 
-               <div>
-                 <label className="block text-sm font-medium text-gray-300 mb-1">Location / Ward</label>
-                 <input type="text" className="glass-input" placeholder="Munnar District" />
-               </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">Location / Ward</label>
+                  <input 
+                    type="text" 
+                    className="glass-input" 
+                    placeholder="Munnar District" 
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
+                </div>
 
-               <div className="bg-[rgba(167,139,113,0.1)] border border-[var(--border-gold)] rounded-xl p-4 flex gap-3 text-sm mt-6">
-                  <Lock className="text-[var(--gold)] shrink-0 mt-0.5" size={18} />
-                  <div>
-                    <strong className="block text-[var(--gold)] mb-1">Identity Protected</strong>
-                    <span className="text-gray-400">Personal details are NEVER stored on the blockchain. The smart contract only records demographic hashes to prevent double-spending while preserving human dignity.</span>
-                  </div>
-               </div>
+                <div className="bg-[rgba(167,139,113,0.1)] border border-[var(--border-gold)] rounded-xl p-4 flex gap-3 text-sm mt-6">
+                   <Lock className="text-[var(--gold)] shrink-0 mt-0.5" size={18} />
+                   <div>
+                     <strong className="block text-[var(--gold)] mb-1">Identity Protected</strong>
+                     <span className="text-gray-400">Personal details are NEVER stored on the blockchain. The smart contract only records demographic hashes to prevent double-spending while preserving human dignity.</span>
+                   </div>
+                </div>
 
-               <div className="pt-4 flex justify-end gap-3 border-t border-[var(--border-subtle)] mt-2">
-                 <button type="button" onClick={() => setIsModalOpen(false)} className="btn-outline px-6 py-3">Cancel</button>
-                 <button type="button" className="btn-gold px-8 py-3">Register & Hash Data</button>
-               </div>
-             </form>
+                <div className="pt-4 flex justify-end gap-3 border-t border-[var(--border-subtle)] mt-2">
+                  <button type="button" onClick={() => setIsModalOpen(false)} className="btn-outline px-6 py-3">Cancel</button>
+                  <button 
+                    type="submit" 
+                    className="btn-gold px-8 py-3 flex items-center justify-center gap-2"
+                    disabled={loading}
+                  >
+                    {loading ? <><Loader2 size={18} className="animate-spin" /> Processing...</> : "Register & Hash Data"}
+                  </button>
+                </div>
+              </form>
           </div>
         </div>
       )}

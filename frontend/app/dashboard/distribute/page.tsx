@@ -1,15 +1,54 @@
 "use client"
 import React, { useState } from 'react';
-import { CheckCircle, Upload, ArrowRight } from 'lucide-react';
+import { CheckCircle, Upload, ArrowRight, Loader2 } from 'lucide-react';
+import { useWallet } from '@/context/WalletContext';
+import { invokeContract } from '@/lib/stellar';
 
 export default function DistributeAid() {
+  const { publicKey, signTransaction } = useWallet();
   const [mode, setMode] = useState<'single' | 'batch'>('single');
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [txHash, setTxHash] = useState('');
 
-  const handleDistribute = (e: React.FormEvent) => {
+  // Form State
+  const [disaster, setDisaster] = useState('kerala2025');
+  const [victimId, setVictimId] = useState('');
+  const [amount, setAmount] = useState('45.00');
+
+  const handleDistribute = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccess(true);
+    if (!publicKey) {
+      alert("Please connect your wallet first");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const result = await invokeContract({
+        contractId: process.env.NEXT_PUBLIC_RELIEF_POOL_CONTRACT_ID!,
+        method: 'distribute_aid',
+        args: [
+           victimId,
+           BigInt(Math.floor(parseFloat(amount) * 10000000)), // USDC has 7 decimals on Stellar
+           disaster
+        ],
+        publicKey,
+        signTransaction
+      });
+      
+      if (result.success) {
+        setTxHash(result.hash);
+        setSuccess(true);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Distribution failed. See console for details.");
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   if (success) {
     return (
@@ -21,7 +60,14 @@ export default function DistributeAid() {
         </p>
         <div className="flex gap-4">
           <button onClick={() => setSuccess(false)} className="btn-outline">Distribute More</button>
-          <a href="#" className="btn-gold">View Tx on Explorer <ArrowRight size={16}/></a>
+          <a 
+            href={`https://stellar.expert/explorer/testnet/tx/${txHash}`} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="btn-gold"
+          >
+            View Tx on Explorer <ArrowRight size={16}/>
+          </a>
         </div>
       </div>
     );
@@ -56,14 +102,26 @@ export default function DistributeAid() {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                    <label className="block text-sm font-medium text-gray-300 mb-2">Disaster Operation</label>
-                   <select className="glass-select" required>
+                   <select 
+                    className="glass-select" 
+                    required 
+                    value={disaster}
+                    onChange={(e) => setDisaster(e.target.value)}
+                   >
                      <option value="kerala2025">Kerala Flood 2025</option>
                      <option value="turkey2024">Turkey Quake Relief</option>
                    </select>
                 </div>
                 <div>
                    <label className="block text-sm font-medium text-gray-300 mb-2">Victim ID (Hashed ID)</label>
-                   <input type="text" className="glass-input uppercase font-mono" placeholder="VIC-" required/>
+                   <input 
+                    type="text" 
+                    className="glass-input uppercase font-mono" 
+                    placeholder="VIC-" 
+                    required
+                    value={victimId}
+                    onChange={(e) => setVictimId(e.target.value)}
+                   />
                 </div>
              </div>
 
@@ -74,7 +132,15 @@ export default function DistributeAid() {
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">$</span>
-                  <input type="number" className="glass-input pl-8" placeholder="45.00" required step="0.01"/>
+                  <input 
+                    type="number" 
+                    className="glass-input pl-8" 
+                    placeholder="45.00" 
+                    required 
+                    step="0.01"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
                 </div>
              </div>
 
@@ -90,19 +156,32 @@ export default function DistributeAid() {
                <div className="label-text mb-4 text-center">Distribution Preview</div>
                <div className="flex justify-between items-center py-2 border-b border-[var(--border-subtle)]">
                  <span className="text-gray-400">Recipient ID</span>
-                 <span className="font-mono text-white">VIC-XXXX</span>
+                 <span className="font-mono text-white">{victimId || 'VIC-XXXX'}</span>
                </div>
                <div className="flex justify-between items-center py-2 border-b border-[var(--border-subtle)]">
                  <span className="text-gray-400">Network Fee (XLM)</span>
-                 <span className="text-white">~0.00001</span>
+                 <span className="text-white">~0.01</span>
                </div>
                <div className="flex justify-between items-center py-3">
                  <span className="font-semibold text-white">Total Output</span>
-                 <span className="font-display italic text-2xl text-[var(--gold)]">$45.00</span>
+                 <span className="font-display italic text-2xl text-[var(--gold)]">${parseFloat(amount || '0').toFixed(2)}</span>
                </div>
              </div>
 
-             <button type="submit" className="btn-gold w-full btn-large">Confirm & Distribute Aid</button>
+             <button 
+                type="submit" 
+                className="btn-gold w-full btn-large flex items-center justify-center gap-2"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="animate-spin" size={20} />
+                    Processing Distribution...
+                  </>
+                ) : (
+                  "Confirm & Distribute Aid"
+                )}
+              </button>
           </form>
         ) : (
           <div className="space-y-6">

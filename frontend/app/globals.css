@@ -1,47 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --background: 0 0% 4%;
-  --foreground: 0 0% 100%;
+@theme {
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Inter', sans-serif;
 
-  --card: 0 0% 4%;
-  --card-foreground: 0 0% 100%;
+  --color-background: oklch(0.1 0 0);
+  --color-foreground: oklch(1 0 0);
 
-  --popover: 0 0% 4%;
-  --popover-foreground: 0 0% 100%;
+  --color-primary: oklch(0.65 0.05 45);
+  --color-primary-foreground: oklch(0.1 0 0);
 
-  --primary: 32 23% 55%;
-  --primary-foreground: 0 0% 4%;
+  --color-secondary: oklch(0.2 0 0);
+  --color-secondary-foreground: oklch(1 0 0);
 
-  --secondary: 0 0% 10%;
-  --secondary-foreground: 0 0% 100%;
+  --color-muted: oklch(0.2 0 0);
+  --color-muted-foreground: oklch(0.7 0 0);
 
-  --muted: 0 0% 10%;
-  --muted-foreground: 0 0% 65%;
+  --color-accent: oklch(0.65 0.05 45);
+  --color-accent-foreground: oklch(1 0 0);
 
-  --accent: 32 23% 55%;
-  --accent-foreground: 0 0% 100%;
+  --color-destructive: oklch(0.6 0.2 25);
+  --color-destructive-foreground: oklch(1 0 0);
 
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 100%;
+  --color-border: oklch(0.25 0 0);
+  --color-input: oklch(0.25 0 0);
+  --color-ring: oklch(0.65 0.05 45);
 
-  --border: 0 0% 15%;
-  --input: 0 0% 15%;
-  --ring: 32 23% 55%;
-
-  --radius: 0.5rem;
-
-  --gold: #a78b71;
-  --gold-light: #c9b8a0;
-  --gold-hover: #e8d5b7;
-  --bg: #0a0a0a;
-  --glass: rgba(255,255,255,0.03);
-  --glass-border: rgba(255,255,255,0.1);
-  --glow: 0 0 100px rgba(167,139,113,0.2);
+  --radius-lg: 0.5rem;
+  --radius-md: calc(0.5rem - 2px);
+  --radius-sm: calc(0.5rem - 4px);
 }
 
 @layer base {
@@ -52,6 +41,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+:root {
+  --gold: #a78b71;
+  --gold-light: #c9b8a0;
+  --gold-hover: #e8d5b7;
+  --bg: #0a0a0a;
+  --glass: rgba(255,255,255,0.03);
+  --glass-border: rgba(255,255,255,0.1);
+  --glow: 0 0 100px rgba(167,139,113,0.2);
+}
+
 
 * { box-sizing: border-box; }
 

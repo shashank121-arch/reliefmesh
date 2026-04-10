@@ -11,6 +11,7 @@ use soroban_sdk::{
 #[derive(Clone)]
 pub enum DataKey {
     PoolState,
+    Admin,
     Distribution(String),           // id -> Distribution
     DistributionCount,
     DisasterDistributions(String),   // disaster_code -> Vec<String> IDs
@@ -89,7 +90,7 @@ impl ReliefPoolContract {
         admin.require_auth();
 
         let state = PoolState {
-            admin,
+            admin: admin.clone(),
             total_received: 0,
             total_distributed: 0,
             total_victims: 0,
@@ -102,7 +103,28 @@ impl ReliefPoolContract {
         };
 
         env.storage().instance().set(&DataKey::PoolState, &state);
+        env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage().instance().set(&DataKey::DistributionCount, &0u32);
+    }
+
+    pub fn transfer_admin(env: Env, current_admin: Address, new_admin: Address) {
+        current_admin.require_auth();
+        let stored_admin: Address = env.storage().instance().get(&DataKey::Admin).expect("not initialized");
+        if current_admin != stored_admin {
+            panic!("unauthorized: admin only");
+        }
+
+        env.storage().instance().set(&DataKey::Admin, &new_admin);
+        
+        // Also update PoolState admin for consistency
+        let mut state: PoolState = env.storage().instance().get(&DataKey::PoolState).unwrap();
+        state.admin = new_admin.clone();
+        env.storage().instance().set(&DataKey::PoolState, &state);
+
+        env.events().publish(
+            (Symbol::new(&env, "AdminTransferred"),),
+            new_admin
+        );
     }
 
     // ─── Funding ─────────────────────────────────────────────────────────────
@@ -151,7 +173,10 @@ impl ReliefPoolContract {
         enable_clawback: bool,
     ) -> String {
         admin.require_auth();
-        Self::assert_is_admin(&env, &admin);
+        let stored_admin: Address = env.storage().instance().get(&DataKey::Admin).expect("not initialized");
+        if admin != stored_admin {
+            panic!("unauthorized: admin only");
+        }
 
         if amount <= 0 {
             panic!("amount must be positive");

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { CheckCircle, Upload, ArrowRight, Loader2 } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
 import { invokeContract } from '@/lib/stellar';
+import { Address } from '@stellar/stellar-sdk';
 
 export default function DistributeAid() {
   const { publicKey, signTransaction } = useWallet();
@@ -29,9 +30,12 @@ export default function DistributeAid() {
         contractId: process.env.NEXT_PUBLIC_RELIEF_POOL_CONTRACT_ID!,
         method: 'distribute_aid',
         args: [
+           new Address(publicKey), // admin
            victimId,
-           BigInt(Math.floor(parseFloat(amount) * 10000000)), // USDC has 7 decimals on Stellar
-           disaster
+           new Address(publicKey), // victim_wallet (demo maps to user wallet)
+           { type: 'i128', value: BigInt(Math.floor(parseFloat(amount) * 10000000)) }, // Use typed wrapper handled below
+           disaster,
+           true // enable_clawback
         ],
         publicKey,
         signTransaction

@@ -1,10 +1,14 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { AlertTriangle, ArrowRight, Loader2 } from 'lucide-react';
+import { AlertTriangle, ArrowRight, Loader2, Heart, DollarSign, Activity, Smartphone, Signal, Zap } from 'lucide-react';
 import Link from 'next/link';
-import { queryContract } from '@/lib/stellar';
+import { queryContract, streamTransactions } from '@/lib/stellar';
+import { useWallet } from '@/context/WalletContext';
+import SMSSimulator from '@/components/ui/SMSSimulator';
+import { StatSkeleton, TableRowSkeleton, FeedSkeleton } from '@/components/ui/skeleton';
 
 export default function DashboardOverview() {
+  const { publicKey } = useWallet();
   const date = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   const [poolBalance, setPoolBalance] = useState("0");
@@ -12,53 +16,31 @@ export default function DashboardOverview() {
   const [shopkeeperCount, setShopkeeperCount] = useState(0);
   const [pendingCases, setPendingCases] = useState(0);
   const [distributions, setDistributions] = useState<any[]>([]);
+  const [liveFeed, setLiveFeed] = useState<any[]>([]);
+  const [isLive, setIsLive] = useState(false);
   const [fetching, setFetching] = useState(true);
 
+  // Stats Fetching
   useEffect(() => {
     const fetchData = async () => {
       setFetching(true);
       try {
-        // Pool Balance
-        const poolData = await queryContract({
-          contractId: process.env.NEXT_PUBLIC_RELIEF_POOL_CONTRACT_ID!,
-          method: 'get_available_balance'
-        });
+        const poolData = await queryContract({ contractId: process.env.NEXT_PUBLIC_RELIEF_POOL_CONTRACT_ID!, method: 'get_available_balance' });
         if (poolData) setPoolBalance((Number(poolData) / 10000000).toLocaleString(undefined, {minimumFractionDigits: 2}));
 
-        // Victim Count
-        const victimData = await queryContract({
-          contractId: process.env.NEXT_PUBLIC_VICTIM_REGISTRY_CONTRACT_ID!,
-          method: 'get_victim_count'
-        });
-        if (victimData !== null && victimData !== undefined) setVictimCount(Number(victimData));
+        const victimData = await queryContract({ contractId: process.env.NEXT_PUBLIC_VICTIM_REGISTRY_CONTRACT_ID!, method: 'get_victim_count' });
+        if (victimData !== null) setVictimCount(Number(victimData));
 
-        // Shopkeeper Count
-        const skData = await queryContract({
-          contractId: process.env.NEXT_PUBLIC_SHOPKEEPER_REGISTRY_CONTRACT_ID!,
-          method: 'get_active_shopkeepers'
-        });
+        const skData = await queryContract({ contractId: process.env.NEXT_PUBLIC_SHOPKEEPER_REGISTRY_CONTRACT_ID!, method: 'get_active_shopkeepers' });
         if (skData && Array.isArray(skData)) setShopkeeperCount(skData.length);
 
-        // Distributions Array
-        const distData = await queryContract({
-          contractId: process.env.NEXT_PUBLIC_RELIEF_POOL_CONTRACT_ID!,
-          method: 'get_distributions_by_disaster',
-          args: ["kerala2025"]
-        });
-        if (distData && Array.isArray(distData)) {
-          // just taking the last 4
-          setDistributions(distData.slice(-4).reverse());
-        }
+        const distData = await queryContract({ contractId: process.env.NEXT_PUBLIC_RELIEF_POOL_CONTRACT_ID!, method: 'get_distributions_by_disaster', args: ["kerala2025"] });
+        if (distData && Array.isArray(distData)) setDistributions(distData.slice(-4).reverse());
 
-        // Pending Cases
-        const pendingData = await queryContract({
-          contractId: process.env.NEXT_PUBLIC_CLAWBACK_CONTROLLER_CONTRACT_ID!,
-          method: 'get_pending_cases'
-        });
+        const pendingData = await queryContract({ contractId: process.env.NEXT_PUBLIC_CLAWBACK_CONTROLLER_CONTRACT_ID!, method: 'get_pending_cases' });
         if (pendingData && Array.isArray(pendingData)) setPendingCases(pendingData.length);
-
       } catch (e) {
-        console.error("Dashboard data fetch error:", e);
+        console.error("Dashboard stats error:", e);
       } finally {
         setFetching(false);
       }
@@ -66,125 +48,185 @@ export default function DashboardOverview() {
     fetchData();
   }, []);
 
+  // Live Feed Stream
+  useEffect(() => {
+    if (!publicKey) return;
+    setIsLive(true);
+    const cleanup = streamTransactions(publicKey, (tx) => {
+      setLiveFeed(prev => [tx, ...prev].slice(0, 10));
+    });
+    return () => {
+      cleanup();
+      setIsLive(false);
+    };
+  }, [publicKey]);
+
   return (
     <div className="space-y-6 animate-fade-in-up">
-      {/* TOP HEADER */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4">
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row justify-between items-end gap-4">
         <div>
-          <h1 className="font-display italic text-3xl mb-1">Good morning, Relief Coordinator</h1>
+          <h1 className="font-display italic text-3xl mb-1 text-white">Coordinator Dashboard</h1>
           <p className="text-gray-400 text-sm flex items-center gap-2">
-            <span>{date}</span>
-            <span className="text-[var(--border-subtle)]">|</span>
-            <span className="text-[var(--gold)]">Operation: Kerala Flood 2025</span>
+            <span>{date}</span> <span className="opacity-30">|</span> <span className="text-[var(--gold)]">Op: Kerala Flood Relief</span>
           </p>
         </div>
+        {!publicKey && (
+          <div className="bg-[rgba(239,68,68,0.1)] border border-red-900/30 px-4 py-2 rounded-lg text-xs text-red-500 animate-pulse">
+            Connect Admin Wallet for Live Sync
+          </div>
+        )}
       </div>
 
-      {/* ALERT BANNER */}
+      {/* ALERT */}
       {pendingCases > 0 && (
-         <div className="glass-card border-[var(--orange)] bg-[rgba(245,158,11,0.05)] p-4 flex items-center justify-between animate-pulse">
+         <div className="glass-card border-[var(--orange)] bg-[rgba(245,158,11,0.05)] p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
                <AlertTriangle className="text-[var(--orange)]" size={20} />
-               <span className="text-white text-sm font-medium">{pendingCases} Active Clawback Case(s) requires your attention</span>
+               <span className="text-white text-sm">{pendingCases} Disputed Case(s) Pending Oversight</span>
             </div>
-            <Link href="/dashboard/clawback" className="text-[var(--gold)] hover:underline text-sm font-medium flex items-center gap-1">
-               View <ArrowRight size={14} />
-            </Link>
+            <Link href="/dashboard/clawback" className="btn-gold py-1 px-4 text-xs">Resolve Now</Link>
          </div>
       )}
 
-      {/* STATS ROW */}
+      {/* STATS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="glass-card p-6">
-          <div className="label-text mb-2">Pool Balance</div>
-          {fetching ? <Loader2 className="animate-spin text-[var(--gold)]" size={24} /> : (
-            <div className="font-display italic text-3xl text-[var(--gold)]">${poolBalance} <span className="text-sm not-italic opacity-50">USDC</span></div>
-          )}
-        </div>
-        <div className="glass-card p-6">
-          <div className="label-text mb-2">Victims Registered</div>
-          {fetching ? <Loader2 className="animate-spin text-[var(--gold)]" size={24} /> : (
-            <div className="font-display italic text-3xl text-[var(--gold)]">{victimCount}</div>
-          )}
-          <div className="text-[var(--emerald)] text-xs mt-2">Active on network</div>
-        </div>
-        <div className="glass-card p-6">
-          <div className="label-text mb-2">Total Aid Processed</div>
-          <div className="font-display italic text-3xl text-[var(--gold)]">Tracking Live</div>
-          <div className="text-gray-400 text-xs mt-2">from Soroban</div>
-        </div>
-        <div className="glass-card p-6">
-          <div className="label-text mb-2">Shopkeepers Active</div>
-          {fetching ? <Loader2 className="animate-spin text-[var(--emerald)]" size={24} /> : (
-            <div className="font-display italic text-3xl text-[var(--emerald)]">{shopkeeperCount} <span className="text-sm not-italic opacity-50 text-[var(--gold)]">Total</span></div>
-          )}
-          <div className="text-[var(--orange)] text-xs mt-2">0 Flagged today</div>
-        </div>
+         {fetching ? (
+           <>
+             <StatSkeleton />
+             <StatSkeleton />
+             <StatSkeleton />
+             <StatSkeleton />
+           </>
+         ) : (
+           <>
+             <StatCard label="Pool Available" value={`$${poolBalance}`} sub="USDC" color="gold" />
+             <StatCard label="Victims Registered" value={victimCount} sub="Verified Citizens" color="gold" />
+             <StatCard label="Dispute Rate" value={`${pendingCases}`} sub="Active Cases" color="red" />
+             <StatCard label="Shopkeeper Hubs" value={shopkeeperCount} sub="Local Partners" color="emerald" />
+           </>
+         )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* RECENT DISTRIBUTIONS */}
-        <div className="lg:col-span-2 glass-card overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-[var(--border-subtle)] flex items-center justify-between">
-            <h3 className="font-body font-semibold text-lg">Recent Aid Distributions</h3>
-            <Link href="/dashboard/distribute" className="text-[var(--gold)] text-sm hover:underline">View All</Link>
-          </div>
-          <div className="overflow-x-auto min-h-[220px]">
-            <table className="data-table w-full">
-              <thead>
-                <tr>
-                  <th>Victim ID</th>
-                  <th>Amount</th>
-                  <th className="desktop-only">Disaster</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {fetching ? (
-                  <tr><td colSpan={4} className="text-center py-6"><Loader2 className="animate-spin text-[var(--gold)] mx-auto" /></td></tr>
-                ) : distributions.length === 0 ? (
-                  <tr><td colSpan={4} className="text-center py-6 text-gray-500">No recent distributions recorded.</td></tr>
-                ) : distributions.map((dist, i) => (
-                  <tr key={i}>
-                    <td><div className="font-mono text-sm">{dist.victim_id || dist[1] || "-"}</div></td>
-                    <td><div className="text-[var(--gold)] font-medium">${dist.amount ? Number(dist.amount)/10000000 : 0}.00</div></td>
-                    <td className="desktop-only"><span className="badge badge-gold">Kerala 2025</span></td>
-                    <td><span className="badge badge-green">Delivered</span></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        {/* RECENT ACTIVITY */}
+        <div className="lg:col-span-2 space-y-6">
+           <div className="glass-card flex flex-col h-full min-h-[400px]">
+              <div className="p-6 border-b border-[var(--border-subtle)] flex justify-between items-center">
+                <h3 className="font-semibold text-white">Recent Distributions</h3>
+                <Link href="/dashboard/distribute" className="text-xs text-[var(--gold)] hover:underline flex items-center gap-1">New Distribution <ArrowRight size={14}/></Link>
+              </div>
+              <div className="flex-1 overflow-x-auto">
+                <table className="data-table w-full text-sm">
+                  <thead>
+                    <tr><th>Identity Hash</th><th>Amount</th><th>Timestamp</th><th>Status</th></tr>
+                  </thead>
+                  <tbody className="text-xs">
+                    {fetching ? (
+                       <tr>
+                         <td colSpan={4} className="p-0">
+                           <TableRowSkeleton />
+                           <TableRowSkeleton />
+                           <TableRowSkeleton />
+                           <TableRowSkeleton />
+                         </td>
+                       </tr>
+                    ) : distributions.length === 0 ? (
+                       <tr><td colSpan={4} className="text-center py-20 text-gray-600 italic">No records found for current disaster.</td></tr>
+                    ) : distributions.map((dist, i) => (
+                      <tr key={i}>
+                        <td className="font-mono text-gray-300">{dist.victim_id?.slice(0,12) || dist[1]?.slice(0,12)}...</td>
+                        <td className="text-[var(--gold)] font-bold">${Number(dist.amount)/10000000}.00</td>
+                        <td className="text-gray-500">{new Date(Number(dist.distributed_at)*1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+                        <td><span className="badge badge-green">On-Chain ✓</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+           </div>
+
+           {/* SMS SIMULATOR SECTION */}
+           <div className="glass-card p-8 border-[var(--border-subtle)]">
+             <SMSSimulator />
+           </div>
         </div>
 
-        {/* ACTIVE DISASTERS */}
-        <div className="glass-card p-6 flex flex-col h-full">
-           <div className="label-text mb-4">Active Operations</div>
-           <div className="space-y-4 flex-1">
-              <div className="bg-[var(--bg-elevated)] p-4 rounded-xl border border-[var(--border-subtle)]">
-                 <h4 className="font-semibold text-sm mb-1">Kerala Flood 2025</h4>
-                 <div className="text-xs text-gray-400 mb-3 flex items-center justify-between">
-                   <span>Victims: {victimCount}/500</span>
-                   <span className="text-[var(--gold)]">Live Coverage</span>
-                 </div>
-                 <div className="progress-bar">
-                   <div className="progress-bar-fill" style={{ width: `${Math.min((victimCount / 500) * 100, 100)}%` }}></div>
-                 </div>
+        {/* LIVE ACTIVITY FEED */}
+        <div className="glass-card flex flex-col h-full">
+           <div className="p-6 border-b border-[var(--border-subtle)] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold text-white">Live Operations</h3>
+                {isLive ? (
+                   <div className="flex items-center gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[var(--emerald)] animate-pulse"></div>
+                      <span className="text-[8px] font-bold text-[var(--emerald)] uppercase tracking-tighter">Live</span>
+                   </div>
+                ) : (
+                  <span className="text-[8px] text-gray-500 uppercase tracking-tighter">Syncing...</span>
+                )}
               </div>
-              <div className="bg-[var(--bg-elevated)] p-4 rounded-xl border border-[var(--border-subtle)] opacity-60">
-                 <h4 className="font-semibold text-sm mb-1">Turkey Quake Relief</h4>
-                 <div className="text-xs text-gray-400 mb-3 flex items-center justify-between">
-                   <span>Archived</span>
-                   <span className="text-gray-500">Completed</span>
-                 </div>
-                 <div className="progress-bar">
-                   <div className="progress-bar-fill bg-gray-500 w-[100%]"></div>
-                 </div>
-              </div>
+              <Activity size={14} className="text-gray-500" />
+           </div>
+           
+           <div className="p-4 space-y-3 flex-1 overflow-y-auto max-h-[600px]">
+              {liveFeed.length === 0 ? (
+                <div className="flex flex-col h-full py-4 space-y-6">
+                   <div className="flex items-center gap-2 mb-4">
+                     <Signal size={12} className="text-gray-700 animate-pulse" />
+                     <span className="text-[10px] text-gray-700 font-bold uppercase tracking-widest">Initializing...</span>
+                   </div>
+                   <FeedSkeleton />
+                </div>
+              ) : liveFeed.map((tx, i) => (
+                <a key={i} href={tx.explorerUrl} target="_blank" className="block glass-card p-3 border-none bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)] transition-all group">
+                   <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg ${
+                        tx.type === 'aid_distributed' ? 'bg-[rgba(167,139,113,0.1)] text-[var(--gold)]' :
+                        tx.type === 'pool_funded' ? 'bg-[rgba(16,185,129,0.1)] text-[var(--emerald)]' :
+                        tx.type === 'clawback' ? 'bg-[rgba(239,68,68,0.1)] text-[var(--red)]' :
+                        'bg-gray-800 text-gray-400'
+                      }`}>
+                        {tx.type === 'aid_distributed' && <Heart size={14}/>}
+                        {tx.type === 'pool_funded' && <DollarSign size={14}/>}
+                        {tx.type === 'clawback' && <AlertTriangle size={14}/>}
+                        {tx.type === 'transaction' && <Activity size={14}/>}
+                      </div>
+                      <div className="flex-1 overflow-hidden">
+                        <div className="text-[11px] font-bold text-white capitalize">{tx.type.replace('_',' ')}</div>
+                        <div className="text-[9px] text-gray-500 truncate">{tx.memo}</div>
+                      </div>
+                      <div className="text-right">
+                         <div className="text-[9px] text-[var(--gold)] font-mono">{tx.hash}</div>
+                         <div className="text-[8px] text-gray-600">Recently</div>
+                      </div>
+                   </div>
+                </a>
+              ))}
+           </div>
+
+           <div className="p-4 border-t border-[var(--border-subtle)]">
+              <Link href="/onboard" className="btn-outline w-full py-2 text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2">
+                 Join Network Monitor <Smartphone size={12}/>
+              </Link>
            </div>
         </div>
       </div>
+    </div>
+  );
+}
 
+function StatCard({ label, value, sub, color }: any) {
+  const colorMap: any = {
+    gold: 'text-[var(--gold)]',
+    emerald: 'text-[var(--emerald)]',
+    red: 'text-[var(--red)]'
+  };
+  return (
+    <div className="glass-card p-6">
+      <div className="label-text mb-2 opacity-60 uppercase">{label}</div>
+      <div className={`font-display italic text-3xl ${colorMap[color] || 'text-white'}`}>{value}</div>
+      <div className="text-gray-500 text-[10px] mt-2 uppercase tracking-widest">{sub}</div>
     </div>
   );
 }

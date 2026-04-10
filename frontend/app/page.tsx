@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useWallet } from '@/context/WalletContext';
 import WalletConnect from '@/components/ui/WalletConnect';
+import SMSSimulator from '@/components/ui/SMSSimulator';
 import { 
   Shield, Zap, Globe, Heart,
   ArrowRight, Lock, Users, 
@@ -59,11 +60,11 @@ export default function LandingPage() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 mb-16 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-          <Link href="/dashboard" className="btn-gold">
-            Start Distributing Aid <ArrowRight size={18} />
+          <Link href="/onboard" className="btn-gold">
+            Get Started <ArrowRight size={18} />
           </Link>
-          <Link href="#how-it-works" className="btn-outline">
-            See How It Works
+          <Link href="/dashboard" className="btn-outline">
+            Launch Dashboard
           </Link>
         </div>
 
@@ -164,7 +165,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* SECTION 4 — FEATURES GRID */}
+      {/* SECTION 4 — SMS SIMULATION */}
+      <section className="section bg-[rgba(167,139,113,0.02)] border-y border-[var(--border-subtle)]">
+         <div className="container mx-auto px-6">
+            <SMSSimulator />
+         </div>
+      </section>
+
+      {/* SECTION 5 — FEATURES GRID */}
       <section id="features" className="section relative">
         <p className="section-label label-text">BUILT FOR CRISIS</p>
         <h2 className="section-heading text-white">Every Feature Matters</h2>
@@ -290,6 +298,7 @@ export default function LandingPage() {
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">About</a></li>
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">Mission</a></li>
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">Contact</a></li>
+                <li><Link href="/feedback" className="hover:text-[var(--gold)] transition-colors">Beta Feedback</Link></li>
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">Privacy Policy</a></li>
               </ul>
             </div>

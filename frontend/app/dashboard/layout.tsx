@@ -3,9 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Globe, Users, Store, Zap } from 'lucide-react';
+import { LayoutDashboard, Globe, Users, Store, Zap, Settings, MessageSquare } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
 import WalletConnect from '@/components/ui/WalletConnect';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export default function DashboardLayout({
   children,
@@ -22,6 +23,8 @@ export default function DashboardLayout({
     { href: "/dashboard/victims", icon: Users, label: "Victims" },
     { href: "/dashboard/shopkeepers", icon: Store, label: "Shopkeepers" },
     { href: "/dashboard/clawback", icon: Zap, label: "Clawback" },
+    { href: "/dashboard/settings", icon: Settings, label: "Settings" },
+    { href: "/feedback", icon: MessageSquare, label: "Feedback" },
   ];
 
 
@@ -105,7 +108,9 @@ export default function DashboardLayout({
       {/* MAIN CONTENT */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto w-full relative z-0">
          <div className="p-4 md:p-8 pb-24 md:pb-8 max-w-7xl mx-auto w-full">
-            {children}
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
          </div>
       </main>
 

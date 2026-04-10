@@ -1,21 +1,66 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertTriangle, ShieldCheck, Zap, Loader2 } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
-import { invokeContract } from '@/lib/stellar';
+import { invokeContract, queryContract } from '@/lib/stellar';
 
 export default function ClawbackPage() {
   const { publicKey, signTransaction } = useWallet();
   const [isInitiateModalOpen, setIsInitiateModalOpen] = useState(false);
   const [isExecuteOpen, setIsExecuteOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+
+  // State Data
+  const [cases, setCases] = useState<any[]>([]);
+  const [totalRecovered, setTotalRecovered] = useState("0");
+  const [selectedCase, setSelectedCase] = useState<any>(null);
 
   // Form State
-  const [shopkeeperId, setShopkeeperId] = useState('SK008');
-  const [shopkeeperWallet, setShopkeeperWallet] = useState('GB6X...X9L2'); // Placeholder
+  const [shopkeeperId, setShopkeeperId] = useState('');
+  const [shopkeeperWallet, setShopkeeperWallet] = useState(''); // Placeholder
   const [amount, setAmount] = useState('200.00');
   const [reason, setReason] = useState('Price Gouging');
   const [evidence, setEvidence] = useState('');
+
+  const fetchCases = async () => {
+    setFetching(true);
+    try {
+      const data = await queryContract({
+        contractId: process.env.NEXT_PUBLIC_CLAWBACK_CONTROLLER_CONTRACT_ID!,
+        method: 'get_pending_cases',
+        args: []
+      });
+      if (data && Array.isArray(data)) {
+        setCases(data.map((c: any) => ({
+          id: c.case_id || c[0],
+          shopkeeper: c.shopkeeper_id || c[1],
+          shopkeeperWallet: c.shopkeeper_wallet || c[2],
+          amount: c.amount ? Number(c.amount) / 10000000 : 0,
+          reason: c.reason || c[4],
+          status: c.status?.name || 'Pending',
+        })));
+      } else {
+        setCases([]);
+      }
+
+      const total = await queryContract({
+        contractId: process.env.NEXT_PUBLIC_CLAWBACK_CONTROLLER_CONTRACT_ID!,
+        method: 'get_total_recovered'
+      });
+      if (total) setTotalRecovered((Number(total) / 10000000).toString());
+
+    } catch(err) {
+      console.error(err);
+      setCases([]);
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCases();
+  }, []);
 
   const handleInitiate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +74,7 @@ export default function ClawbackPage() {
         args: [
            publicKey,
            shopkeeperId,
-           shopkeeperWallet, // Needs real address
+           shopkeeperWallet,
            BigInt(Math.floor(parseFloat(amount) * 10000000)),
            reason,
            evidence || "No evidence hash provided"
@@ -41,6 +86,7 @@ export default function ClawbackPage() {
       if (result.success) {
         alert("Clawback case initiated successfully. Case ID will be visible in the list shortly.");
         setIsInitiateModalOpen(false);
+        fetchCases();
       }
     } catch (err) {
       console.error(err);
@@ -65,22 +111,26 @@ export default function ClawbackPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
          <div className="glass-card p-6 border-l-4 border-l-[var(--orange)]">
             <div className="label-text mb-2 text-[var(--orange)]">Pending Cases</div>
-            <div className="font-display italic text-4xl text-white">1</div>
+            {fetching ? <Loader2 className="animate-spin text-[var(--orange)]" size={24} /> : (
+              <div className="font-display italic text-4xl text-white">{cases.length}</div>
+            )}
          </div>
          <div className="glass-card p-6 border-l-4 border-l-[var(--gold)]">
             <div className="label-text mb-2 text-[var(--gold)]">Executed Clawbacks</div>
-            <div className="font-display italic text-4xl text-white">3</div>
+            <div className="font-display italic text-4xl text-white">0</div>
          </div>
          <div className="glass-card p-6 border-l-4 border-l-[var(--emerald)]">
             <div className="label-text mb-2 text-[var(--emerald)]">Total Recovered</div>
-            <div className="font-display italic text-4xl text-white">$650</div>
+            {fetching ? <Loader2 className="animate-spin text-[var(--emerald)]" size={24} /> : (
+              <div className="font-display italic text-4xl text-white">${totalRecovered}</div>
+            )}
          </div>
       </div>
 
       <div className="glass-card overflow-hidden">
          <h3 className="p-6 border-b border-[var(--border-subtle)] font-bold font-body text-lg">Active Cases</h3>
-         <div className="overflow-x-auto">
-            <table className="data-table">
+         <div className="overflow-x-auto min-h-[200px]">
+            <table className="data-table w-full">
                <thead>
                  <tr>
                    <th>Case ID</th>
@@ -92,24 +142,22 @@ export default function ClawbackPage() {
                  </tr>
                </thead>
                <tbody>
-                  <tr>
-                    <td className="font-mono">CB-9921</td>
-                    <td>SK008 (Rahul's)</td>
-                    <td className="text-[var(--gold)] font-bold">$200.00</td>
-                    <td>Price Gouging</td>
-                    <td><span className="badge badge-orange">Pending Review</span></td>
-                    <td>
-                      <button onClick={()=>setIsExecuteOpen(true)} className="btn-outline px-3 py-1 text-xs hover:border-[var(--emerald)] hover:text-[var(--emerald)] hover:bg-[rgba(52,211,153,0.1)]">Approve</button>
-                    </td>
-                  </tr>
-                  <tr className="opacity-70">
-                    <td className="font-mono">CB-9810</td>
-                    <td>SK041 (Amin)</td>
-                    <td className="text-[var(--gold)] font-bold">$150.00</td>
-                    <td>Fraud</td>
-                    <td><span className="badge badge-green">Executed</span></td>
-                    <td><span className="text-gray-500 text-xs cursor-pointer hover:underline">View Tx</span></td>
-                  </tr>
+                  {fetching ? (
+                    <tr><td colSpan={6} className="text-center py-6"><Loader2 className="animate-spin text-[var(--gold)] mx-auto" /></td></tr>
+                  ) : cases.length === 0 ? (
+                    <tr><td colSpan={6} className="text-center py-6 text-gray-500">No active clawback cases found.</td></tr>
+                  ) : cases.map((c, i) => (
+                    <tr key={i}>
+                      <td className="font-mono">{c.id}</td>
+                      <td>{c.shopkeeper}</td>
+                      <td className="text-[var(--gold)] font-bold">${c.amount}.00</td>
+                      <td>{c.reason}</td>
+                      <td><span className="badge badge-orange">{c.status}</span></td>
+                      <td>
+                        <button onClick={() => { setSelectedCase(c); setIsExecuteOpen(true); }} className="btn-outline px-3 py-1 text-xs hover:border-[var(--emerald)] hover:text-[var(--emerald)] hover:bg-[rgba(52,211,153,0.1)]">Approve</button>
+                      </td>
+                    </tr>
+                  ))}
                </tbody>
             </table>
          </div>
@@ -204,9 +252,9 @@ export default function ClawbackPage() {
               <p className="text-gray-400 mb-6 text-sm">Admin approval required. The smart contract will immediately pull $200.00 USDC from the shopkeeper wallet.</p>
               
               <div className="bg-[var(--bg-elevated)] p-4 rounded-xl border border-[var(--border-subtle)] mb-6 text-left text-sm space-y-2">
-                 <div className="flex justify-between"><span className="text-gray-500">Case ID</span><span className="font-mono text-white">CB-9921</span></div>
-                 <div className="flex justify-between"><span className="text-gray-500">From Wallet</span><span className="font-mono text-white truncate w-32">G...X9L2</span></div>
-                 <div className="flex justify-between"><span className="text-gray-500">Amount</span><span className="font-bold text-[var(--gold)]">$200.00</span></div>
+                 <div className="flex justify-between"><span className="text-gray-500">Case ID</span><span className="font-mono text-white">{selectedCase?.id}</span></div>
+                 <div className="flex justify-between"><span className="text-gray-500">From Wallet</span><span className="font-mono text-white truncate w-32" title={selectedCase?.shopkeeperWallet}>{selectedCase?.shopkeeperWallet?.substring(0,4)}...{selectedCase?.shopkeeperWallet?.substring(selectedCase?.shopkeeperWallet?.length-4)}</span></div>
+                 <div className="flex justify-between"><span className="text-gray-500">Amount</span><span className="font-bold text-[var(--gold)]">${selectedCase?.amount}.00</span></div>
               </div>
 
               <div className="flex gap-3">

@@ -1,8 +1,8 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Lock, Search, PlusCircle, Loader2 } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
-import { invokeContract } from '@/lib/stellar';
+import { invokeContract, queryContract } from '@/lib/stellar';
 
 async function hashData(data: string) {
   const encoder = new TextEncoder();
@@ -16,12 +16,45 @@ export default function VictimsPage() {
   const { publicKey, signTransaction } = useWallet();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+  const [victims, setVictims] = useState<any[]>([]);
 
   // Form State
   const [phone, setPhone] = useState('');
   const [nationalId, setNationalId] = useState('');
   const [disaster, setDisaster] = useState('kerala2025');
   const [location, setLocation] = useState('');
+
+  const fetchVictims = async () => {
+    setFetching(true);
+    try {
+      const data = await queryContract({
+        contractId: process.env.NEXT_PUBLIC_VICTIM_REGISTRY_CONTRACT_ID!,
+        method: 'get_victims_by_disaster',
+        args: [disaster] // uses currently selected disaster filter
+      });
+      if (data && Array.isArray(data)) {
+         setVictims(data.map((v: any) => ({
+           id: v.id || v[0],
+           disaster: v.disaster_code || v[3] || disaster,
+           received: v.aid_received ? Number(v.aid_received)/10000000 : 0,
+           available: v.aid_available ? Number(v.aid_available)/10000000 : 0,
+           status: v.is_active ? 'Active' : 'Inactive'
+         })));
+      } else {
+         setVictims([]);
+      }
+    } catch (e) {
+      console.error(e);
+      setVictims([]);
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchVictims();
+  }, [disaster]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,13 +151,25 @@ export default function VictimsPage() {
                </tr>
              </thead>
              <tbody>
-               {[1,2,3,4,5].map(i => (
+               {fetching ? (
+                 <tr>
+                   <td colSpan={6} className="text-center py-8">
+                     <Loader2 className="animate-spin text-[var(--gold)] mx-auto" size={24} />
+                   </td>
+                 </tr>
+               ) : victims.length === 0 ? (
+                 <tr>
+                   <td colSpan={6} className="text-center py-8 text-gray-400">
+                     No victims found for selected disaster.
+                   </td>
+                 </tr>
+               ) : victims.map((victim: any, i: number) => (
                  <tr key={i}>
-                   <td className="font-mono">VIC-X{i}9A</td>
-                   <td><span className="badge badge-gold">Kerala 2025</span></td>
-                   <td className="text-white">$145.00</td>
-                   <td className="text-[var(--gold)] font-bold">$45.00</td>
-                   <td><span className="badge badge-green">Active</span></td>
+                   <td className="font-mono">{victim.id}</td>
+                   <td><span className="badge badge-gold">{victim.disaster}</span></td>
+                   <td className="text-white">${victim.received}.00</td>
+                   <td className="text-[var(--gold)] font-bold">${victim.available}.00</td>
+                   <td><span className={`badge ${victim.status === 'Active' ? 'badge-green' : 'badge-orange'}`}>{victim.status}</span></td>
                    <td><button className="text-sm text-gray-400 hover:text-[var(--gold)] transition-colors">View Details</button></td>
                  </tr>
                ))}

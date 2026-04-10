@@ -1,17 +1,63 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Store, AlertTriangle, CheckCircle, PlusCircle, Loader2 } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
-import { invokeContract } from '@/lib/stellar';
+import { invokeContract, queryContract } from '@/lib/stellar';
 
 export default function ShopkeepersPage() {
   const { publicKey, signTransaction } = useWallet();
   const [isFlagModalOpen, setIsFlagModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [selectedSK, setSelectedSK] = useState<any>(null);
+  const [shopkeepers, setShopkeepers] = useState<any[]>([]);
 
-  // Form State
+  // Flag Form State
   const [reason, setReason] = useState('Price Gouging (taking cut of aid)');
+
+  // Add SK Form State
+  const [newSkId, setNewSkId] = useState('');
+  const [newSkWallet, setNewSkWallet] = useState('');
+  const [newSkName, setNewSkName] = useState('');
+  const [newSkLocation, setNewSkLocation] = useState('');
+  const [newSkPhone, setNewSkPhone] = useState('');
+  const [newSkLimit, setNewSkLimit] = useState('1000');
+
+  const fetchShopkeepers = async () => {
+    setFetching(true);
+    try {
+      const data = await queryContract({
+        contractId: process.env.NEXT_PUBLIC_SHOPKEEPER_REGISTRY_CONTRACT_ID!,
+        method: 'get_active_shopkeepers',
+        args: []
+      });
+      // Assuming data is an array of objects
+      if (data && Array.isArray(data)) {
+         setShopkeepers(data.map((sk: any) => ({
+           id: sk.id || sk[0],
+           name: sk.name || sk[2] || "Unknown",
+           location: sk.location || sk[3] || "Unknown",
+           limit: sk.max_daily_limit ? Number(sk.max_daily_limit) / 10000000 : 1000,
+           current: sk.today_cashouts ? Number(sk.today_cashouts) / 10000000 : 0,
+           processed: sk.total_cashouts ? Number(sk.total_cashouts) / 10000000 : 0,
+           disputes: sk.dispute_count || 0,
+           status: sk.is_active ? 'Active' : 'Flagged'
+         })));
+      } else {
+         setShopkeepers([]);
+      }
+    } catch (e) {
+      console.error(e);
+      setShopkeepers([]);
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchShopkeepers();
+  }, []);
 
   const handleFlag = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +80,7 @@ export default function ShopkeepersPage() {
       if (result.success) {
         alert(`Shopkeeper ${selectedSK.id} has been flagged. Dispute documented on-chain.`);
         setIsFlagModalOpen(false);
+        fetchShopkeepers();
       }
     } catch (err) {
       console.error(err);
@@ -43,11 +90,42 @@ export default function ShopkeepersPage() {
     }
   };
 
-  const shopkeepers = [
-    { id: 'SK008', name: "Rahul's Store", location: "Kerala, Ward 12", limit: 1000, current: 300, processed: 4500, disputes: 0, status: 'Active' },
-    { id: 'SK012', name: "Munnar Trading Co", location: "Kerala, Ward 5", limit: 2000, current: 1100, processed: 12400, disputes: 1, status: 'Active' },
-    { id: 'SK041', name: "Amin Grocers", location: "Kerala, Ward 9", limit: 500, current: 480, processed: 2100, disputes: 3, status: 'Flagged' },
-  ];
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!publicKey) {
+      alert("Please connect your wallet first.");
+      return;
+    }
+    setLoading(true);
+    try {
+       const result = await invokeContract({
+         contractId: process.env.NEXT_PUBLIC_SHOPKEEPER_REGISTRY_CONTRACT_ID!,
+         method: 'register_shopkeeper',
+         args: [
+           publicKey,
+           newSkId,
+           newSkWallet,
+           newSkName,
+           newSkLocation,
+           newSkPhone,
+           BigInt(Math.floor(parseFloat(newSkLimit) * 10000000))
+         ],
+         publicKey,
+         signTransaction
+       });
+
+       if (result.success) {
+          alert("Shopkeeper added successfully.");
+          setIsAddModalOpen(false);
+          fetchShopkeepers();
+       }
+    } catch (err) {
+      console.error("Failed to add sk:", err);
+      alert("Failed to register shopkeeper.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -56,62 +134,73 @@ export default function ShopkeepersPage() {
           <h1 className="font-display italic text-4xl mb-2">Shopkeeper Network</h1>
           <p className="text-gray-400 text-sm">Verified local cash-out points with daily limits.</p>
         </div>
-        <button className="btn-gold whitespace-nowrap bg-[var(--gold)] text-black font-bold py-3 px-6 rounded-full flex items-center gap-2 hover:bg-[var(--gold-hover)] transition-all">
+        <button 
+          onClick={() => setIsAddModalOpen(true)}
+          className="btn-gold whitespace-nowrap bg-[var(--gold)] text-black font-bold py-3 px-6 rounded-full flex items-center gap-2 hover:bg-[var(--gold-hover)] transition-all">
           <PlusCircle size={18} /> Add Shopkeeper
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {shopkeepers.map((sk) => (
-          <div key={sk.id} className="glass-card glass-card-hover p-6 flex flex-col">
-            <div className="flex justify-between items-start mb-4">
-               <div>
-                 <h3 className="font-bold text-white text-lg flex items-center gap-2">
-                   {sk.name} 
-                   {sk.status === 'Active' ? <CheckCircle size={16} className="text-[var(--emerald)]" /> : null}
-                 </h3>
-                 <p className="text-sm text-gray-400">{sk.location}</p>
-               </div>
-               <span className={`badge ${sk.status === 'Flagged' ? 'badge-orange' : 'badge-green'} text-[10px]`}>
-                 {sk.status}
-               </span>
-            </div>
+      {fetching ? (
+        <div className="flex justify-center p-12"><Loader2 className="animate-spin text-[var(--gold)]" size={32} /></div>
+      ) : shopkeepers.length === 0 ? (
+        <div className="glass-card text-center p-12 text-gray-400">
+           No active shopkeepers found on network. Register one to get started.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {shopkeepers.map((sk, index) => (
+            <div key={index} className="glass-card glass-card-hover p-6 flex flex-col">
+              <div className="flex justify-between items-start mb-4">
+                 <div>
+                   <h3 className="font-bold text-white text-lg flex items-center gap-2">
+                     {sk.name} 
+                     {sk.status === 'Active' ? <CheckCircle size={16} className="text-[var(--emerald)]" /> : null}
+                   </h3>
+                   <p className="text-sm text-gray-400">{sk.location}</p>
+                 </div>
+                 <span className={`badge ${sk.status === 'Flagged' ? 'badge-orange' : 'badge-green'} text-[10px]`}>
+                   {sk.status}
+                 </span>
+              </div>
 
-            <div className="mb-4 bg-[var(--bg-elevated)] p-3 rounded-lg border border-[var(--border-subtle)]">
-               <div className="flex justify-between text-xs mb-2">
-                 <span className="text-gray-400">Daily Cashout Limit</span>
-                 <span className="text-[var(--gold)] font-mono">${sk.current} / ${sk.limit}</span>
-               </div>
-               <div className="progress-bar h-2">
-                 <div className="progress-bar-fill" style={{ width: `${(sk.current / sk.limit) * 100}%` }}></div>
-               </div>
-            </div>
+              <div className="mb-4 bg-[var(--bg-elevated)] p-3 rounded-lg border border-[var(--border-subtle)]">
+                 <div className="flex justify-between text-xs mb-2">
+                   <span className="text-gray-400">Daily Cashout Limit</span>
+                   <span className="text-[var(--gold)] font-mono">${sk.current} / ${sk.limit}</span>
+                 </div>
+                 <div className="progress-bar h-2">
+                   <div className="progress-bar-fill" style={{ width: `${Math.min((sk.current / sk.limit) * 100, 100)}%` }}></div>
+                 </div>
+              </div>
 
-            <div className="grid grid-cols-2 gap-2 text-center mb-6 py-3 border-y border-[var(--border-subtle)]">
-               <div>
-                  <div className="label-text">Lifetime Processed</div>
-                  <div className="font-mono text-white mt-1">${sk.processed}</div>
-               </div>
-               <div className="border-l border-[var(--border-subtle)]">
-                  <div className="label-text">Disputes</div>
-                  <div className={`font-mono mt-1 ${sk.disputes > 0 ? 'text-[var(--orange)]' : 'text-gray-500'}`}>{sk.disputes}</div>
-               </div>
-            </div>
+              <div className="grid grid-cols-2 gap-2 text-center mb-6 py-3 border-y border-[var(--border-subtle)]">
+                 <div>
+                    <div className="label-text">Lifetime Processed</div>
+                    <div className="font-mono text-white mt-1">${sk.processed}</div>
+                 </div>
+                 <div className="border-l border-[var(--border-subtle)]">
+                    <div className="label-text">Disputes</div>
+                    <div className={`font-mono mt-1 ${sk.disputes > 0 ? 'text-[var(--orange)]' : 'text-gray-500'}`}>{sk.disputes}</div>
+                 </div>
+              </div>
 
-            <div className="mt-auto flex gap-3">
-               <button className="btn-outline flex-1 py-2 text-xs h-10 rounded-full">View Log</button>
-               <button 
-                 onClick={() => { setSelectedSK(sk); setIsFlagModalOpen(true); }} 
-                 className={`btn-gold flex-1 py-2 text-xs h-10 rounded-full bg-[var(--gold)] text-black font-bold ${sk.status === 'Flagged' ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[var(--gold-hover)]'}`}
-                 disabled={sk.status === 'Flagged'}
-               >
-                 Flag / Audit
-               </button>
+              <div className="mt-auto flex gap-3">
+                 <button className="btn-outline flex-1 py-2 text-xs h-10 rounded-full">View Log</button>
+                 <button 
+                   onClick={() => { setSelectedSK(sk); setIsFlagModalOpen(true); }} 
+                   className={`btn-gold flex-1 py-2 text-xs h-10 rounded-full bg-[var(--gold)] text-black font-bold ${sk.status === 'Flagged' ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[var(--gold-hover)]'}`}
+                   disabled={sk.status === 'Flagged'}
+                 >
+                   Flag / Audit
+                 </button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
+      {/* FLAG MODAL */}
       {isFlagModalOpen && (
         <div className="modal-overlay" onClick={() => setIsFlagModalOpen(false)}>
            <div className="modal-card glass-card border-[rgba(245,158,11,0.3)] animate-modal-in" onClick={e=>e.stopPropagation()}>
@@ -158,6 +247,59 @@ export default function ShopkeepersPage() {
            </div>
         </div>
       )}
+
+      {/* ADD SHOPKEEPER MODAL */}
+      {isAddModalOpen && (
+        <div className="modal-overlay" onClick={() => setIsAddModalOpen(false)}>
+           <div className="modal-card glass-card border-[rgba(167,139,113,0.3)] animate-modal-in" onClick={e=>e.stopPropagation()}>
+              <h2 className="font-display italic text-3xl mb-2 flex items-center gap-3">
+                <Store className="text-[var(--gold)]"/> Register Shopkeeper
+              </h2>
+              <p className="text-sm text-gray-400 mb-6 font-body">Add a verified neighborhood location for victim cash-outs.</p>
+
+              <form className="space-y-4" onSubmit={handleAdd}>
+                 <div>
+                   <label className="block text-sm text-gray-300 mb-1">Stellar Public Key (Wallet)</label>
+                   <input type="text" required className="glass-input text-sm font-mono" placeholder="G..." value={newSkWallet} onChange={(e) => setNewSkWallet(e.target.value)} />
+                 </div>
+                 <div className="grid grid-cols-2 gap-4">
+                   <div>
+                     <label className="block text-sm text-gray-300 mb-1">Shopkeeper ID</label>
+                     <input type="text" required className="glass-input" placeholder="SK-..." value={newSkId} onChange={(e) => setNewSkId(e.target.value)} />
+                   </div>
+                   <div>
+                     <label className="block text-sm text-gray-300 mb-1">Daily Limit (USDC)</label>
+                     <input type="number" required className="glass-input" placeholder="1000" value={newSkLimit} onChange={(e) => setNewSkLimit(e.target.value)} />
+                   </div>
+                 </div>
+                 <div>
+                   <label className="block text-sm text-gray-300 mb-1">Business Name</label>
+                   <input type="text" required className="glass-input" placeholder="Rahul's Store" value={newSkName} onChange={(e) => setNewSkName(e.target.value)} />
+                 </div>
+                 <div>
+                   <label className="block text-sm text-gray-300 mb-1">Location</label>
+                   <input type="text" required className="glass-input" placeholder="Kerala, Ward 12" value={newSkLocation} onChange={(e) => setNewSkLocation(e.target.value)} />
+                 </div>
+                 <div>
+                   <label className="block text-sm text-gray-300 mb-1">Phone Contact (Optional)</label>
+                   <input type="text" className="glass-input" placeholder="+91..." value={newSkPhone} onChange={(e) => setNewSkPhone(e.target.value)} />
+                 </div>
+
+                 <div className="pt-4 flex justify-end gap-3 mt-4">
+                   <button type="button" onClick={() => setIsAddModalOpen(false)} className="btn-outline py-3 px-6 h-12 rounded-full">Cancel</button>
+                   <button 
+                    type="submit" 
+                    className="btn-gold bg-[var(--gold)] text-black py-3 px-8 h-12 rounded-full font-bold flex items-center gap-2 hover:bg-[var(--gold-hover)]"
+                    disabled={loading}
+                   >
+                     {loading ? <Loader2 className="animate-spin" size={20} /> : "Record On-Chain"}
+                   </button>
+                 </div>
+              </form>
+           </div>
+        </div>
+      )}
     </div>
   )
 }
+

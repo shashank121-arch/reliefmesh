@@ -1,105 +1,236 @@
-"use client";
-import React, { useState } from "react";
-import { useWallet } from "@/context/WalletContext";
-import { ArrowRight, CheckCircle } from "lucide-react";
-import Link from "next/link";
+"use client"
+import { useWallet } from '@/context/WalletContext'
+import { Wallet, LogOut, RefreshCw, 
+  ExternalLink, ChevronDown } from 'lucide-react'
+import { useState } from 'react'
 
-export default function WalletConnect({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { connected, walletType, publicKey, xlmBalance, usdcBalance, connectFreighter, connectAlbedo, connectManual } = useWallet();
-  const [manualKey, setManualKey] = useState("");
+interface WalletConnectProps {
+  className?: string
+}
 
-  if (!isOpen) return null;
+export function WalletConnect({ 
+  className = '' 
+}: WalletConnectProps) {
+  const { 
+    isConnected, 
+    isLoading,
+    publicKey, 
+    xlmBalance,
+    usdcBalance,
+    connect, 
+    disconnect,
+    refreshBalance
+  } = useWallet()
+  
+  const [showDropdown, setShowDropdown] = 
+    useState(false)
+  const [refreshing, setRefreshing] = 
+    useState(false)
 
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card glass-card gold-border animate-modal-in" onClick={(e) => e.stopPropagation()}>
-        {!connected ? (
+  const truncate = (key: string) => 
+    key.slice(0, 6) + '...' + key.slice(-4)
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    await refreshBalance()
+    setRefreshing(false)
+  }
+
+  // NOT CONNECTED STATE
+  if (!isConnected) {
+    return (
+      <button
+        onClick={connect}
+        disabled={isLoading}
+        className={`
+          flex items-center gap-2
+          px-5 py-2.5 rounded-full
+          border border-white/20
+          text-white text-sm font-medium
+          hover:border-yellow-600/60
+          hover:text-yellow-400
+          transition-all duration-300
+          disabled:opacity-50
+          disabled:cursor-not-allowed
+          ${className}
+        `}>
+        {isLoading ? (
           <>
-            <div className="text-center mb-8">
-              <h2 className="font-display italic text-2xl mb-2">Connect Wallet</h2>
-              <p className="label-text">Access the ReliefMesh network</p>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <button onClick={connectFreighter} className="glass-card glass-card-hover p-6 flex items-center justify-between hover:gold-border">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-blue-900 flex items-center justify-center border border-blue-500">
-                    <span className="text-xl font-bold">F</span>
-                  </div>
-                  <div className="text-left">
-                    <div className="font-bold text-base">Freighter</div>
-                    <div className="text-sm text-gray-400">Browser Extension · Recommended</div>
-                  </div>
-                </div>
-                <ArrowRight className="text-[var(--gold)]" size={20} />
-              </button>
-
-              <button onClick={connectAlbedo} className="glass-card glass-card-hover p-6 flex items-center justify-between hover:gold-border">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-purple-900 flex items-center justify-center border border-purple-500">
-                    <span className="text-xl font-bold">A</span>
-                  </div>
-                  <div className="text-left">
-                    <div className="font-bold text-base">Albedo</div>
-                    <div className="text-sm text-gray-400">Web-based · No Installation</div>
-                  </div>
-                </div>
-                <ArrowRight className="text-[var(--gold)]" size={20} />
-              </button>
-            </div>
-
-            <div className="my-6 text-center text-sm text-gray-500 relative">
-              <span className="bg-[var(--bg-elevated)] px-4 relative z-10">or continue with</span>
-              <div className="absolute top-1/2 left-0 w-full h-px bg-[var(--border-subtle)] -z-0"></div>
-            </div>
-
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Enter Stellar public key..."
-                className="glass-input flex-1"
-                value={manualKey}
-                onChange={(e) => setManualKey(e.target.value)}
-              />
-              <button 
-                onClick={() => connectManual(manualKey)}
-                className="btn-gold px-6"
-              >
-                Go
-              </button>
-            </div>
-
-            <div className="mt-8 text-center text-sm">
-              <span className="text-gray-400">New to Stellar? </span>
-              <a href="https://freighter.app" target="_blank" rel="noopener noreferrer" className="text-[var(--gold)] hover:underline">
-                Get Freighter
-              </a>
-            </div>
+            <div className="w-4 h-4 
+              border-2 border-white/30 
+              border-t-white rounded-full 
+              animate-spin"/>
+            Connecting...
           </>
         ) : (
-          <div className="text-center py-6">
-            <CheckCircle className="text-[var(--gold)] mx-auto mb-4 animate-glow-pulse" size={64} />
-            <h2 className="font-display italic text-2xl mb-4">Wallet Connected</h2>
-            <div className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl p-4 mb-6">
-              <div className="text-sm text-gray-400 mb-1 truncate">{publicKey}</div>
-              <div className="flex justify-between items-center mt-4">
-                <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wider">XLM</div>
-                  <div className="font-semibold">{xlmBalance}</div>
+          <>
+            <Wallet className="w-4 h-4"/>
+            Connect Wallet
+          </>
+        )}
+      </button>
+    )
+  }
+
+  // CONNECTED STATE — dropdown menu
+  return (
+    <div className="relative">
+      <button
+        onClick={() => 
+          setShowDropdown(s => !s)
+        }
+        className={`
+          flex items-center gap-2
+          px-4 py-2 rounded-full
+          bg-white/[0.04]
+          border border-white/10
+          hover:border-yellow-600/40
+          transition-all duration-300
+          text-sm
+          ${className}
+        `}>
+        {/* Green connected dot */}
+        <div className="w-2 h-2 rounded-full 
+          bg-emerald-400 
+          shadow-[0_0_6px_rgba(52,211,153,0.6)]"/>
+        
+        {/* Truncated address */}
+        <span className="text-white font-mono 
+          text-xs">
+          {truncate(publicKey!)}
+        </span>
+        
+        {/* USDC balance */}
+        <span className="text-yellow-500/80 
+          text-xs font-medium hidden sm:block">
+          {usdcBalance.toFixed(2)} USDC
+        </span>
+        
+        <ChevronDown className={`
+          w-3 h-3 text-white/50 
+          transition-transform duration-200
+          ${showDropdown ? 'rotate-180' : ''}
+        `}/>
+      </button>
+
+      {/* Dropdown */}
+      {showDropdown && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 z-40"
+            onClick={() => setShowDropdown(false)}
+          />
+          
+          {/* Menu */}
+          <div className="absolute right-0 
+            top-full mt-2 z-50
+            w-72 rounded-2xl overflow-hidden
+            bg-[#111111]
+            border border-white/10
+            shadow-2xl
+            shadow-black/50">
+            
+            {/* Wallet info header */}
+            <div className="p-4 
+              border-b border-white/5">
+              <div className="flex items-center 
+                justify-between mb-3">
+                <p className="text-white/50 
+                  text-xs uppercase tracking-wider">
+                  Connected Wallet
+                </p>
+                <div className="flex items-center 
+                  gap-1">
+                  <div className="w-1.5 h-1.5 
+                    rounded-full bg-emerald-400"/>
+                  <span className="text-emerald-400 
+                    text-xs">Testnet</span>
                 </div>
-                <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wider">USDC</div>
-                  <div className="font-semibold text-[var(--gold)]">{usdcBalance}</div>
+              </div>
+              
+              <p className="text-white font-mono 
+                text-xs break-all mb-3">
+                {publicKey}
+              </p>
+              
+              <a
+                href={`https://stellar.expert/explorer/testnet/account/${publicKey}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1
+                  text-yellow-600/70 text-xs
+                  hover:text-yellow-500
+                  transition-colors">
+                <ExternalLink className="w-3 h-3"/>
+                View on Stellar Expert
+              </a>
+            </div>
+            
+            {/* Balances */}
+            <div className="p-4 
+              border-b border-white/5">
+              <div className="flex justify-between 
+                items-center mb-2">
+                <p className="text-white/50 
+                  text-xs uppercase tracking-wider">
+                  Balances
+                </p>
+                <button
+                  onClick={handleRefresh}
+                  disabled={refreshing}
+                  className="text-white/30 
+                    hover:text-white/60 
+                    transition-colors">
+                  <RefreshCw className={`
+                    w-3 h-3
+                    ${refreshing 
+                      ? 'animate-spin' 
+                      : ''}
+                  `}/>
+                </button>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-white/60 
+                    text-sm">XLM</span>
+                  <span className="text-white 
+                    text-sm font-medium">
+                    {xlmBalance.toFixed(4)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/60 
+                    text-sm">USDC</span>
+                  <span className="text-yellow-400 
+                    text-sm font-medium">
+                    {usdcBalance.toFixed(2)}
+                  </span>
                 </div>
               </div>
             </div>
-            <div className="flex gap-4">
-               <button onClick={onClose} className="btn-outline flex-1">Close</button>
-               <Link href="/dashboard" className="btn-gold flex-1" onClick={onClose}>Enter App</Link>
+            
+            {/* Disconnect */}
+            <div className="p-2">
+              <button
+                onClick={() => {
+                  disconnect()
+                  setShowDropdown(false)
+                }}
+                className="w-full flex items-center 
+                  gap-2 px-3 py-2.5 rounded-xl
+                  text-red-400/80 text-sm
+                  hover:bg-red-500/10
+                  hover:text-red-400
+                  transition-all duration-200">
+                <LogOut className="w-4 h-4"/>
+                Disconnect Wallet
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
-  );
+  )
 }

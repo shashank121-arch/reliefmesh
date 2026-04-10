@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { WalletProvider } from "@/context/WalletContext";
+import { FreighterCheck } from "@/components/FreighterCheck";
 
 export const metadata: Metadata = {
   title: "ReliefMesh — Decentralized Disaster Relief on Stellar",
@@ -16,7 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <WalletProvider>{children}</WalletProvider>
+        <WalletProvider>
+          {children}
+          <FreighterCheck />
+        </WalletProvider>
       </body>
     </html>
   );

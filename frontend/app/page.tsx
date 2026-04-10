@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+
 import Link from 'next/link';
-import { useWallet } from '@/context/WalletContext';
-import WalletConnect from '@/components/ui/WalletConnect';
+
+import { WalletConnect } from '@/components/ui/WalletConnect';
 import SMSSimulator from '@/components/ui/SMSSimulator';
 import { 
   Shield, Zap, Globe, Heart,
@@ -12,10 +12,8 @@ import {
   WifiOff
 } from 'lucide-react';
 
-export default function LandingPage() {
-  const { connected } = useWallet();
-  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
 
+export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
       {/* SECTION 1 — FIXED NAVBAR */}
@@ -32,11 +30,7 @@ export default function LandingPage() {
         </div>
 
         <div className="flex items-center gap-4">
-          {!connected ? (
-             <button onClick={() => setIsWalletModalOpen(true)} className="btn-outline hidden sm:inline-flex py-2 px-4 text-xs font-semibold uppercase tracking-wider">Connect Wallet</button>
-          ) : (
-             <Link href="/dashboard" className="btn-outline hidden sm:inline-flex py-2 px-4 text-xs font-semibold uppercase tracking-wider">Dashboard</Link>
-          )}
+          <WalletConnect />
           <Link href="/dashboard" className="btn-gold py-2 px-4 text-xs font-semibold uppercase tracking-wider">Launch App</Link>
         </div>
       </nav>
@@ -319,7 +313,6 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      <WalletConnect isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} />
     </div>
   );
 }

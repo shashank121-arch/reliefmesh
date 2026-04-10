@@ -1,11 +1,10 @@
 "use client"
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Globe, Users, Store, Zap, Settings, MessageSquare } from 'lucide-react';
-import { useWallet } from '@/context/WalletContext';
-import WalletConnect from '@/components/ui/WalletConnect';
+import { WalletConnect } from '@/components/ui/WalletConnect';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export default function DashboardLayout({
@@ -14,8 +13,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { connected, publicKey, usdcBalance } = useWallet();
-  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
 
   const navItems = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Overview" },
@@ -61,22 +58,7 @@ export default function DashboardLayout({
         </nav>
 
         <div className="p-6 mt-auto">
-          <button 
-            onClick={() => setIsWalletModalOpen(true)}
-            className="w-full glass-card px-4 py-3 bg-[var(--bg-elevated)] hover:bg-[rgba(255,255,255,0.05)] transition-colors text-left"
-          >
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <div className={`status-dot ${connected ? 'status-dot-green' : 'status-dot-red'}`}></div>
-                <span className="text-xs text-white truncate max-w-[150px]">
-                  {connected && publicKey ? publicKey : "Connect Wallet"}
-                </span>
-              </div>
-              <div className="text-[var(--gold)] font-bold text-sm tracking-widest">
-                ${usdcBalance} USDC
-              </div>
-            </div>
-          </button>
+          <WalletConnect className="w-full" />
         </div>
       </aside>
 
@@ -96,14 +78,7 @@ export default function DashboardLayout({
               </Link>
             )
           })}
-          <button 
-            onClick={() => setIsWalletModalOpen(true)}
-            className={`flex flex-col items-center justify-center w-full h-full p-2 ${connected ? "text-[var(--emerald)]" : "text-gray-500"}`}
-          >
-            <div className={`status-dot mb-1 ${connected ? 'status-dot-green' : 'status-dot-red'}`}></div>
-            <span className="text-[9px] font-medium leading-none">Wallet</span>
-          </button>
-      </nav>
+   </nav>
 
       {/* MAIN CONTENT */}
       <main className="flex-1 flex flex-col h-screen overflow-y-auto w-full relative z-0">
@@ -113,8 +88,6 @@ export default function DashboardLayout({
             </ErrorBoundary>
          </div>
       </main>
-
-      <WalletConnect isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} />
     </div>
   );
 }

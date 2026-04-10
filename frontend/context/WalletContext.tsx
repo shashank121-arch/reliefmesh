@@ -1,222 +1,281 @@
-"use client";
-
-import React, {
+"use client"
+import {
   createContext,
   useContext,
   useState,
   useEffect,
   useCallback,
-  ReactNode,
-} from "react";
+  ReactNode
+} from 'react'
+import { toast } from 'sonner'
 
-/* ─── Types ────────────────────────────────────────────────────────────────── */
 interface WalletState {
-  publicKey: string | null;
-  xlmBalance: string;
-  usdcBalance: string;
-  connected: boolean;
-  connecting: boolean;
-  walletType: "freighter" | "albedo" | "manual" | null;
-  connectFreighter: () => Promise<void>;
-  connectAlbedo: () => Promise<void>;
-  connectManual: (key: string) => void;
-  disconnect: () => void;
-  refreshBalance: () => Promise<void>;
-  signTransaction: (xdr: string) => Promise<string>;
+  publicKey: string | null
+  isConnected: boolean
+  xlmBalance: number
+  usdcBalance: number
+  isLoading: boolean
+  network: string
 }
 
-const WalletContext = createContext<WalletState | undefined>(undefined);
+interface WalletContextType extends WalletState {
+  connect: () => Promise<void>
+  disconnect: () => void
+  refreshBalance: () => Promise<void>
+  signTransaction: (xdr: string) => Promise<string>
+}
 
-const HORIZON_URL =
-  process.env.NEXT_PUBLIC_HORIZON_URL ||
-  "https://horizon-testnet.stellar.org";
+const WalletContext = createContext<WalletContextType>(
+  {} as WalletContextType
+)
 
-/* ─── Provider ─────────────────────────────────────────────────────────────── */
-export function WalletProvider({ children }: { children: ReactNode }) {
-  const [publicKey, setPublicKey] = useState<string | null>(null);
-  const [xlmBalance, setXlmBalance] = useState("0");
-  const [usdcBalance, setUsdcBalance] = useState("0");
-  const [connected, setConnected] = useState(false);
-  const [connecting, setConnecting] = useState(false);
-  const [walletType, setWalletType] = useState<
-    "freighter" | "albedo" | "manual" | null
-  >(null);
+const HORIZON_URL = 
+  'https://horizon-testnet.stellar.org'
 
-  /* ── Fetch balances from Horizon ──────────────────────────────────────── */
-  const getBalances = useCallback(async (key: string) => {
-    try {
-      const res = await fetch(`${HORIZON_URL}/accounts/${key}`);
-      if (!res.ok) {
-        setXlmBalance("0");
-        setUsdcBalance("0");
-        return;
+const USDC_ISSUER = 
+  'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5'
+
+async function fetchBalances(publicKey: string) {
+  try {
+    const res = await fetch(
+      `${HORIZON_URL}/accounts/${publicKey}`
+    )
+    if (!res.ok) return { xlm: 0, usdc: 0 }
+    
+    const data = await res.json()
+    let xlm = 0
+    let usdc = 0
+    
+    for (const b of data.balances) {
+      if (b.asset_type === 'native') {
+        xlm = parseFloat(b.balance) || 0
       }
-      const data = await res.json();
-      const xlm = data.balances?.find(
-        (b: any) => b.asset_type === "native"
-      );
-      const usdc = data.balances?.find(
-        (b: any) =>
-          b.asset_code === "USDC" ||
-          b.asset_code === "yUSDC"
-      );
-      setXlmBalance(xlm ? parseFloat(xlm.balance).toFixed(2) : "0");
-      setUsdcBalance(usdc ? parseFloat(usdc.balance).toFixed(2) : "0");
-    } catch {
-      setXlmBalance("0");
-      setUsdcBalance("0");
+      if (
+        b.asset_code === 'USDC' &&
+        b.asset_issuer === USDC_ISSUER
+      ) {
+        usdc = parseFloat(b.balance) || 0
+      }
     }
-  }, []);
+    
+    return { xlm, usdc }
+  } catch {
+    return { xlm: 0, usdc: 0 }
+  }
+}
 
-  /* ── Refresh balance ──────────────────────────────────────────────────── */
-  const refreshBalance = useCallback(async () => {
-    if (publicKey) {
-      await getBalances(publicKey);
-    }
-  }, [publicKey, getBalances]);
+export function WalletProvider({ 
+  children 
+}: { 
+  children: ReactNode 
+}) {
+  const [state, setState] = useState<WalletState>({
+    publicKey: null,
+    isConnected: false,
+    xlmBalance: 0,
+    usdcBalance: 0,
+    isLoading: false,
+    network: 'TESTNET'
+  })
 
-  /* ── Sign Transaction ────────────────────────────────────────────────── */
-  const signTransaction = useCallback(
-    async (xdr: string) => {
-      const win = window as any;
-      if (walletType === "freighter") {
-        return await win.freighterApi.signTransaction({
-          xdr,
-          network: "TESTNET",
-        });
-      } else if (walletType === "albedo") {
-        const result = await win.albedo.tx({
-          xdr,
-          network: "testnet",
-        });
-        return result.signed_envelope;
-      } else {
-        throw new Error("Signing not supported for this wallet type");
-      }
-    },
-    [walletType]
-  );
-
-  /* ── Freighter ────────────────────────────────────────────────────────── */
-  const connectFreighter = useCallback(async () => {
-    setConnecting(true);
-    try {
-      const win = window as any;
-      if (!win.freighterApi) {
-        window.open("https://freighter.app", "_blank");
-        throw new Error("Freighter not installed");
-      }
-      const api = win.freighterApi;
-      const key = await api.getPublicKey();
-      if (key) {
-        setPublicKey(key);
-        setConnected(true);
-        setWalletType("freighter");
-        localStorage.setItem("rm_wallet_key", key);
-        localStorage.setItem("rm_wallet_type", "freighter");
-        await getBalances(key);
-      }
-    } catch (e) {
-      console.error("Freighter connection failed:", e);
-    } finally {
-      setConnecting(false);
-    }
-  }, [getBalances]);
-
-  /* ── Albedo ───────────────────────────────────────────────────────────── */
-  const connectAlbedo = useCallback(async () => {
-    setConnecting(true);
-    try {
-      const win = window as any;
-      if (!win.albedo) {
-        window.open("https://albedo.link", "_blank");
-        throw new Error("Albedo not available");
-      }
-      const result = await win.albedo.publicKey({});
-      if (result?.pubkey) {
-        setPublicKey(result.pubkey);
-        setConnected(true);
-        setWalletType("albedo");
-        localStorage.setItem("rm_wallet_key", result.pubkey);
-        localStorage.setItem("rm_wallet_type", "albedo");
-        await getBalances(result.pubkey);
-      }
-    } catch (e) {
-      console.error("Albedo connection failed:", e);
-    } finally {
-      setConnecting(false);
-    }
-  }, [getBalances]);
-
-  /* ── Manual key ───────────────────────────────────────────────────────── */
-  const connectManual = useCallback(
-    (key: string) => {
-      if (key && key.length === 56 && key.startsWith("G")) {
-        setPublicKey(key);
-        setConnected(true);
-        setWalletType("manual");
-        localStorage.setItem("rm_wallet_key", key);
-        localStorage.setItem("rm_wallet_type", "manual");
-        getBalances(key);
-      }
-    },
-    [getBalances]
-  );
-
-  /* ── Disconnect ───────────────────────────────────────────────────────── */
-  const disconnect = useCallback(() => {
-    setPublicKey(null);
-    setXlmBalance("0");
-    setUsdcBalance("0");
-    setConnected(false);
-    setWalletType(null);
-    localStorage.removeItem("rm_wallet_key");
-    localStorage.removeItem("rm_wallet_type");
-  }, []);
-
-  /* ── Auto-reconnect from localStorage ─────────────────────────────────── */
+  // Auto reconnect on page load
   useEffect(() => {
-    const savedKey = localStorage.getItem("rm_wallet_key");
-    const savedType = localStorage.getItem("rm_wallet_type") as
-      | "freighter"
-      | "albedo"
-      | "manual"
-      | null;
-    if (savedKey && savedType) {
-      setPublicKey(savedKey);
-      setConnected(true);
-      setWalletType(savedType);
-      getBalances(savedKey);
+    const savedKey = localStorage.getItem(
+      'reliefmesh_pubkey'
+    )
+    if (!savedKey) return
+    
+    fetchBalances(savedKey).then(({ xlm, usdc }) => {
+      setState(s => ({
+        ...s,
+        publicKey: savedKey,
+        isConnected: true,
+        xlmBalance: xlm,
+        usdcBalance: usdc
+      }))
+    })
+  }, [])
+
+  const connect = useCallback(async () => {
+    setState(s => ({ ...s, isLoading: true }))
+    
+    try {
+      // Dynamic import to avoid SSR issues
+      const freighter = await import(
+        '@stellar/freighter-api'
+      )
+      
+      // Check if Freighter is installed
+      const { isConnected } = freighter
+      const installed = await isConnected()
+      
+      if (!installed) {
+        toast.error(
+          'Freighter not found. Installing...',
+          { duration: 3000 }
+        )
+        window.open(
+          'https://www.freighter.app',
+          '_blank'
+        )
+        setState(s => ({ ...s, isLoading: false }))
+        return
+      }
+      
+      // Check network — must be testnet
+      const { getNetworkDetails } = freighter
+      const networkDetails = await getNetworkDetails()
+      
+      if (
+        networkDetails.networkPassphrase !==
+        'Test SDF Network ; September 2015'
+      ) {
+        toast.error(
+          'Please switch Freighter to Testnet. ' +
+          'Settings → Network → Testnet',
+          { duration: 5000 }
+        )
+        setState(s => ({ ...s, isLoading: false }))
+        return
+      }
+      
+      // Request public key — triggers Freighter popup
+      const { getPublicKey } = freighter
+      const publicKey = await getPublicKey()
+      
+      if (!publicKey) {
+        toast.error('Connection cancelled')
+        setState(s => ({ ...s, isLoading: false }))
+        return
+      }
+      
+      // Fetch balances
+      const { xlm, usdc } = await fetchBalances(
+        publicKey
+      )
+      
+      // Save to localStorage for auto-reconnect
+      localStorage.setItem(
+        'reliefmesh_pubkey', 
+        publicKey
+      )
+      
+      setState({
+        publicKey,
+        isConnected: true,
+        xlmBalance: xlm,
+        usdcBalance: usdc,
+        isLoading: false,
+        network: 'TESTNET'
+      })
+      
+      toast.success('Wallet connected!')
+      
+    } catch (err: any) {
+      console.error('Freighter error:', err)
+      
+      // Handle specific Freighter errors
+      if (err?.message?.includes('User declined')) {
+        toast.error('Connection declined in Freighter')
+      } else if (err?.message?.includes('not found')) {
+        toast.error(
+          'Please install Freighter extension'
+        )
+        window.open(
+          'https://www.freighter.app', 
+          '_blank'
+        )
+      } else {
+        toast.error(
+          'Connection failed. ' +
+          'Check Freighter is unlocked.'
+        )
+      }
+      
+      setState(s => ({ ...s, isLoading: false }))
     }
-  }, [getBalances]);
+  }, [])
+
+  const disconnect = useCallback(() => {
+    localStorage.removeItem('reliefmesh_pubkey')
+    setState({
+      publicKey: null,
+      isConnected: false,
+      xlmBalance: 0,
+      usdcBalance: 0,
+      isLoading: false,
+      network: 'TESTNET'
+    })
+    toast.success('Wallet disconnected')
+  }, [])
+
+  const refreshBalance = useCallback(async () => {
+    if (!state.publicKey) return
+    const { xlm, usdc } = await fetchBalances(
+      state.publicKey
+    )
+    setState(s => ({ 
+      ...s, 
+      xlmBalance: xlm, 
+      usdcBalance: usdc 
+    }))
+  }, [state.publicKey])
+
+  const signTransaction = useCallback(
+    async (xdr: string): Promise<string> => {
+      try {
+        const { signTransaction } = await import(
+          '@stellar/freighter-api'
+        )
+        
+        const result = await signTransaction(
+          xdr,
+          {
+            networkPassphrase: 
+              'Test SDF Network ; September 2015',
+            accountToSign: state.publicKey || 
+              undefined
+          }
+        )
+        
+        return result
+      } catch (err: any) {
+        if (
+          err?.message?.includes('User declined') ||
+          err?.message?.includes('rejected')
+        ) {
+          throw new Error(
+            'Transaction rejected in Freighter'
+          )
+        }
+        throw new Error(
+          'Failed to sign transaction: ' + 
+          err?.message
+        )
+      }
+    },
+    [state.publicKey]
+  )
 
   return (
-    <WalletContext.Provider
-      value={{
-        publicKey,
-        xlmBalance,
-        usdcBalance,
-        connected,
-        connecting,
-        walletType,
-        connectFreighter,
-        connectAlbedo,
-        connectManual,
-        disconnect,
-        refreshBalance,
-        signTransaction,
-      }}
-    >
+    <WalletContext.Provider value={{
+      ...state,
+      connect,
+      disconnect,
+      refreshBalance,
+      signTransaction
+    }}>
       {children}
     </WalletContext.Provider>
-  );
+  )
 }
 
-/* ─── Hook ─────────────────────────────────────────────────────────────────── */
-export function useWallet() {
-  const context = useContext(WalletContext);
+export const useWallet = () => {
+  const context = useContext(WalletContext)
   if (!context) {
-    throw new Error("useWallet must be used within a WalletProvider");
+    throw new Error(
+      'useWallet must be used within WalletProvider'
+    )
   }
-  return context;
+  return context
 }

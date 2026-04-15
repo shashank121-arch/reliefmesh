@@ -56,7 +56,7 @@ impl VictimRegistryContract {
         if env.storage().instance().has(&DataKey::Admin) {
             panic!("already initialized");
         }
-        admin.require_auth();
+        // Removed admin.require_auth() to allow CLI deployer to assign Freighter wallet
         env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage().instance().set(&DataKey::VictimCount, &0u32);
     }

@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Smartphone, Download, DollarSign, ShieldCheck, ArrowRight, Loader2, CheckCircle, ExternalLink, RefreshCw } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
-import { TransactionBuilder, Operation, Asset, Networks, BASE_FEE } from '@stellar/stellar-sdk';
+import { TransactionBuilder, Operation, Asset, Networks, BASE_FEE, Account, Transaction } from '@stellar/stellar-sdk';
+import { horizonServer } from '@/lib/stellar';
 
 export default function OnboardPage() {
   const { publicKey, signTransaction } = useWallet();
@@ -37,22 +38,13 @@ export default function OnboardPage() {
     setStatus('Preparing Trustline Transaction...');
     try {
       const usdcAsset = new Asset('USDC', 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5');
-      const horizonUrl = process.env.NEXT_PUBLIC_HORIZON_URL || 'https://horizon-testnet.stellar.org';
       
-      const accountResponse = await fetch(`${horizonUrl}/accounts/${publicKey}`);
-      const accountData = await accountResponse.json();
+      const account = await horizonServer.loadAccount(publicKey);
       
-      const tx = new TransactionBuilder(
-        {
-          sequenceNumber: () => accountData.sequence,
-          incrementSequenceNumber: () => {},
-          accountId: publicKey
-        } as any, 
-        {
-          fee: BASE_FEE,
-          networkPassphrase: Networks.TESTNET
-        }
-      )
+      const tx = new TransactionBuilder(account, {
+        fee: BASE_FEE,
+        networkPassphrase: Networks.TESTNET
+      })
         .addOperation(Operation.changeTrust({
           asset: usdcAsset,
           limit: '1000000'
@@ -63,20 +55,18 @@ export default function OnboardPage() {
       const xdr = tx.toXDR();
       const signedXdr = await signTransaction(xdr);
       
-      const submitResponse = await fetch(`${horizonUrl}/transactions`, {
-        method: 'POST',
-        body: new URLSearchParams({ tx: signedXdr })
-      });
+      const response = await horizonServer.submitTransaction(TransactionBuilder.fromXDR(signedXdr, Networks.TESTNET) as Transaction);
       
-      if (submitResponse.ok) {
+      if (response.successful) {
         setStatus('USDC Trustline Established!');
         setTimeout(() => setStep(4), 1500);
       } else {
-        throw new Error('Trustline submission failed.');
+        throw new Error('Trustline failed.');
       }
     } catch (err: any) {
-      console.error(err);
-      alert('Transaction failed. Ensure you have XLM and Freighter is unlocked.');
+      console.error('Trustline error:', err);
+      const detail = err.response?.data?.extras?.result_codes?.transaction || err.message;
+      alert(`Trustline failed: ${detail}. Ensure you have XLM and Freighter is unlocked.`);
     } finally {
       setLoading(false);
     }

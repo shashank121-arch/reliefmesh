@@ -69,7 +69,7 @@ export default function ShopkeepersPage() {
         contractId: process.env.NEXT_PUBLIC_SHOPKEEPER_REGISTRY_CONTRACT_ID!,
         method: 'flag_shopkeeper',
         args: [
-           publicKey,
+           { type: 'address', value: publicKey },
            selectedSK.id,
            reason
         ],
@@ -102,22 +102,36 @@ export default function ShopkeepersPage() {
          contractId: process.env.NEXT_PUBLIC_SHOPKEEPER_REGISTRY_CONTRACT_ID!,
          method: 'register_shopkeeper',
          args: [
-           publicKey,
+           { type: 'address', value: publicKey },
            newSkId,
-           newSkWallet,
+           { type: 'address', value: newSkWallet },
            newSkName,
            newSkLocation,
            newSkPhone,
-           BigInt(Math.floor(parseFloat(newSkLimit) * 10000000))
+           { type: 'i128', value: BigInt(Math.floor(parseFloat(newSkLimit) * 10000000)) }
          ],
          publicKey,
          signTransaction
        });
 
        if (result.success) {
-          alert("Shopkeeper added successfully.");
+          // Auto-verify them so they become active on the network immediately
+          try {
+            await invokeContract({
+              contractId: process.env.NEXT_PUBLIC_SHOPKEEPER_REGISTRY_CONTRACT_ID!,
+              method: 'verify_shopkeeper',
+              args: [{ type: 'address', value: publicKey }, newSkId],
+              publicKey,
+              signTransaction
+            });
+          } catch(err) {
+             console.error("Auto-verify failed, but SK is registered:", err);
+          }
+
+          alert("Shopkeeper added and verified successfully.");
           setIsAddModalOpen(false);
-          fetchShopkeepers();
+          // Wait briefly for ledger close then fetch
+          setTimeout(() => fetchShopkeepers(), 1000);
        }
     } catch (err) {
       console.error("Failed to add sk:", err);

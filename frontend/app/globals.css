@@ -2,43 +2,39 @@
 
 @import "tailwindcss";
 
-@theme {
-  --font-serif: 'Playfair Display', serif;
-  --font-sans: 'Inter', sans-serif;
+:root {
+  --background: oklch(0.1 0 0);
+  --foreground: oklch(1 0 0);
 
-  --color-background: oklch(0.1 0 0);
-  --color-foreground: oklch(1 0 0);
+  --primary: oklch(0.65 0.05 45);
+  --primary-foreground: oklch(0.1 0 0);
 
-  --color-primary: oklch(0.65 0.05 45);
-  --color-primary-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.2 0 0);
+  --secondary-foreground: oklch(1 0 0);
 
-  --color-secondary: oklch(0.2 0 0);
-  --color-secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.2 0 0);
+  --muted-foreground: oklch(0.7 0 0);
 
-  --color-muted: oklch(0.2 0 0);
-  --color-muted-foreground: oklch(0.7 0 0);
+  --accent: oklch(0.65 0.05 45);
+  --accent-foreground: oklch(1 0 0);
 
-  --color-accent: oklch(0.65 0.05 45);
-  --color-accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(1 0 0);
 
-  --color-destructive: oklch(0.6 0.2 25);
-  --color-destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.25 0 0);
+  --input: oklch(0.25 0 0);
+  --ring: oklch(0.65 0.05 45);
 
-  --color-border: oklch(0.25 0 0);
-  --color-input: oklch(0.25 0 0);
-  --color-ring: oklch(0.65 0.05 45);
-
-  --radius-lg: 0.5rem;
-  --radius-md: calc(0.5rem - 2px);
-  --radius-sm: calc(0.5rem - 4px);
+  --radius: 0.5rem;
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--border);
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
   }
 }
 

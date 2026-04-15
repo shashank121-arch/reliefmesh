@@ -1,8 +1,8 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Shield, ArrowRight, Loader2, Key, CheckCircle } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
-import { transferAdmin } from '@/lib/stellar';
+import { transferAdmin, queryContract } from '@/lib/stellar';
 import { Keypair } from '@stellar/stellar-sdk';
 
 export default function SettingsPage() {
@@ -11,6 +11,28 @@ export default function SettingsPage() {
   const [success, setSuccess] = useState(false);
   const [currentAdminSecret, setCurrentAdminSecret] = useState('');
   const [txHash, setTxHash] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    async function checkAdmin() {
+      if (!publicKey) return;
+      try {
+        const state: any = await queryContract({
+          contractId: process.env.NEXT_PUBLIC_RELIEF_POOL_CONTRACT_ID!,
+          method: 'get_pool_state',
+        });
+        if (state) {
+          const storedAdmin = state.admin || state[0] || state['0'];
+          if (storedAdmin === publicKey) {
+            setIsAdmin(true);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    checkAdmin();
+  }, [publicKey, success]);
 
   const handleTransfer = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,15 +66,14 @@ export default function SettingsPage() {
   // Re-thinking: I'll update stellar.ts to support a direct secret key signTransaction or a separate function.
   // For now, let's just build the UI.
 
-  if (success) {
+  if (success || isAdmin) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in-up text-center">
         <CheckCircle className="text-[var(--gold)] mb-6 animate-glow-pulse" size={80} />
-        <h1 className="font-display italic text-4xl mb-4">Ownership Transferred</h1>
+        <h1 className="font-display italic text-4xl mb-4">Ownership Verified</h1>
         <p className="text-gray-400 mb-8 max-w-md">
-          Your connected wallet ({publicKey?.slice(0, 6)}...{publicKey?.slice(-4)}) is now the authorized administrator of the Relief Pool.
+          Your connected wallet ({publicKey?.slice(0, 6)}...{publicKey?.slice(-4)}) is <strong>ALREADY</strong> the authorized administrator of the Relief Pool. You hold full governance control over the smart contracts.
         </p>
-        <button onClick={() => setSuccess(false)} className="btn-gold">Back to Settings</button>
       </div>
     );
   }

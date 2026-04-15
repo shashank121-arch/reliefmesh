@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { AlertTriangle, ShieldCheck, Zap, Loader2, CheckCircle, ArrowRight, ClipboardList, Gavel, Play } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
 import { invokeContract, queryContract } from '@/lib/stellar';
+import { Address } from '@stellar/stellar-sdk';
 import { TableRowSkeleton } from '@/components/ui/skeleton';
 
 export default function ClawbackPage() {
@@ -58,9 +59,9 @@ export default function ClawbackPage() {
         contractId: process.env.NEXT_PUBLIC_CLAWBACK_CONTROLLER_CONTRACT_ID!,
         method: 'initiate_clawback',
         args: [
-           publicKey,
+           { type: 'address', value: publicKey },
            shopkeeperId,
-           shopkeeperWallet || publicKey, // For demo, use own wallet if empty
+           { type: 'address', value: shopkeeperWallet || publicKey }, // For demo, use own wallet if empty
            { type: 'i128', value: BigInt(Math.floor(parseFloat(amount) * 10000000)) },
            reason,
            evidence
@@ -70,9 +71,14 @@ export default function ClawbackPage() {
       });
 
       if (result.success) {
-        // In a real app we'd extract the case ID from events
-        // For Level 3 demo, we'll generate/simulate the ID if not returned
-        setCurrentCaseId(`CASE-${Math.floor(Math.random() * 9000) + 1000}`);
+        const pending = await queryContract({
+          contractId: process.env.NEXT_PUBLIC_CLAWBACK_CONTROLLER_CONTRACT_ID!,
+          method: 'get_pending_cases'
+        });
+        if (pending && Array.isArray(pending) && pending.length > 0) {
+           const latestCase = pending[pending.length - 1];
+           setCurrentCaseId(latestCase?.case_id || latestCase?.[0] || 'CASE-X');
+        }
         setStep(2);
       }
     } catch (err) {
@@ -84,12 +90,13 @@ export default function ClawbackPage() {
   };
 
   const handleApprove = async () => {
+    if (!publicKey) return;
     setLoading(true);
     try {
       const result = await invokeContract({
         contractId: process.env.NEXT_PUBLIC_CLAWBACK_CONTROLLER_CONTRACT_ID!,
         method: 'approve_clawback',
-        args: [publicKey, currentCaseId],
+        args: [{ type: 'address', value: publicKey }, currentCaseId],
         publicKey,
         signTransaction
       });
@@ -103,12 +110,13 @@ export default function ClawbackPage() {
   };
 
   const handleExecute = async () => {
+    if (!publicKey) return;
     setLoading(true);
     try {
       const result = await invokeContract({
         contractId: process.env.NEXT_PUBLIC_CLAWBACK_CONTROLLER_CONTRACT_ID!,
         method: 'execute_clawback',
-        args: [publicKey, currentCaseId],
+        args: [{ type: 'address', value: publicKey }, currentCaseId],
         publicKey,
         signTransaction
       });

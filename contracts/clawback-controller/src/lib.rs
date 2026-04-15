@@ -69,7 +69,7 @@ impl ClawbackControllerContract {
         if env.storage().instance().has(&DataKey::Admin) {
             panic!("already initialized");
         }
-        admin.require_auth();
+        // Removed admin.require_auth() to allow CLI deployer to assign Freighter wallet
         env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage().instance().set(&DataKey::TokenAddress, &token_address);
         env.storage().instance().set(&DataKey::CaseCount, &0u32);
@@ -103,7 +103,7 @@ impl ClawbackControllerContract {
             .instance()
             .get(&DataKey::CaseCount)
             .unwrap_or(0);
-        let case_id = String::from_str(&env, &format_u32_as_case_id(count));
+        let case_id = build_case_id(&env, count);
 
         let now = env.ledger().timestamp();
 
@@ -358,23 +358,24 @@ impl ClawbackControllerContract {
     }
 }
 
-/// Helper to format a u32 as a case ID string like "CASE-0001"
-fn format_u32_as_case_id(n: u32) -> &'static str {
-    // In a full impl this would dynamically format; for now we use a static approach
-    // Soroban's no_std constrains formatting. Use a pre-computed match for common cases.
-    match n {
-        0 => "CASE-0001",
-        1 => "CASE-0002",
-        2 => "CASE-0003",
-        3 => "CASE-0004",
-        4 => "CASE-0005",
-        5 => "CASE-0006",
-        6 => "CASE-0007",
-        7 => "CASE-0008",
-        8 => "CASE-0009",
-        9 => "CASE-0010",
-        _ => "CASE-XXXX",
-    }
+/// Generate a case ID string from a counter value.
+fn build_case_id(env: &Env, n: u32) -> String {
+    let num = n + 1; // 1-based
+    let d0 = (num / 1000) % 10;
+    let d1 = (num / 100) % 10;
+    let d2 = (num / 10) % 10;
+    let d3 = num % 10;
+
+    let digits: [u8; 9] = [
+        b'C', b'A', b'S', b'E', b'-',
+        b'0' + d0 as u8,
+        b'0' + d1 as u8,
+        b'0' + d2 as u8,
+        b'0' + d3 as u8,
+    ];
+
+    let s = core::str::from_utf8(&digits).unwrap_or("CASE-0000");
+    String::from_str(env, s)
 }
 
 // ─── Tests ────────────────────────────────────────────────────────────────────

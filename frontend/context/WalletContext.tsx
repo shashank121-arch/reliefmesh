@@ -107,7 +107,7 @@ export function WalletProvider({
       
       // Check if Freighter is installed
       const { isConnected } = freighter
-      const installed = await isConnected()
+      const { isConnected: installed } = await isConnected()
       
       if (!installed) {
         toast.error(
@@ -127,6 +127,7 @@ export function WalletProvider({
       const networkDetails = await getNetworkDetails()
       
       if (
+        networkDetails.error ||
         networkDetails.networkPassphrase !==
         'Test SDF Network ; September 2015'
       ) {
@@ -140,10 +141,10 @@ export function WalletProvider({
       }
       
       // Request public key — triggers Freighter popup
-      const { getPublicKey } = freighter
-      const publicKey = await getPublicKey()
+      const { requestAccess } = freighter
+      const { address: publicKey, error: accessError } = await requestAccess()
       
-      if (!publicKey) {
+      if (accessError || !publicKey) {
         toast.error('Connection cancelled')
         setState(s => ({ ...s, isLoading: false }))
         return
@@ -233,12 +234,16 @@ export function WalletProvider({
           {
             networkPassphrase: 
               'Test SDF Network ; September 2015',
-            accountToSign: state.publicKey || 
+            address: state.publicKey || 
               undefined
           }
         )
+
+        if (result.error) {
+          throw new Error(result.error as unknown as string)
+        }
         
-        return result
+        return result.signedTxXdr
       } catch (err: any) {
         if (
           err?.message?.includes('User declined') ||

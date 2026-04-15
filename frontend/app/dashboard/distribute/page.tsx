@@ -26,14 +26,30 @@ export default function DistributeAid() {
 
     setLoading(true);
     try {
+      // Pre-flight: check pool has sufficient balance
+      const { queryContract } = await import('@/lib/stellar');
+      const available = await queryContract({
+        contractId: process.env.NEXT_PUBLIC_RELIEF_POOL_CONTRACT_ID!,
+        method: 'get_available_balance',
+        args: []
+      });
+
+      const amountStroops = BigInt(Math.floor(parseFloat(amount) * 10000000));
+      
+      if (available !== null && BigInt(available) < amountStroops) {
+        alert(`Insufficient pool balance. Available: ${(Number(available) / 10000000).toFixed(2)} USDC. You must fund the pool first.`);
+        setLoading(false);
+        return;
+      }
+
       const result = await invokeContract({
         contractId: process.env.NEXT_PUBLIC_RELIEF_POOL_CONTRACT_ID!,
         method: 'distribute_aid',
         args: [
-           new Address(publicKey), // admin
+           { type: 'address', value: publicKey }, // admin
            victimId,
-           new Address(publicKey), // victim_wallet (demo maps to user wallet)
-           { type: 'i128', value: BigInt(Math.floor(parseFloat(amount) * 10000000)) }, // Use typed wrapper handled below
+           { type: 'address', value: publicKey }, // victim_wallet (demo maps to user wallet)
+           { type: 'i128', value: amountStroops },
            disaster,
            true // enable_clawback
         ],
@@ -45,9 +61,16 @@ export default function DistributeAid() {
         setTxHash(result.hash);
         setSuccess(true);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Distribution failed. See console for details.");
+      const msg = err?.message || '';
+      if (msg.includes('UnreachableCodeReached') || msg.includes('InvalidAction')) {
+        alert("Distribution failed: The relief pool likely has insufficient USDC balance. Please fund the pool first via the Fund Pool page.");
+      } else if (msg.includes('unauthorized')) {
+        alert("Distribution failed: Your wallet is not the contract admin.");
+      } else {
+        alert("Distribution failed. See console for details.");
+      }
     } finally {
       setLoading(false);
     }

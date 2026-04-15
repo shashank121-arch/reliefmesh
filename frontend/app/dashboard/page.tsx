@@ -117,9 +117,14 @@ export default function DashboardOverview() {
                 <Link href="/dashboard/distribute" className="text-xs text-[var(--gold)] hover:underline flex items-center gap-1">New Distribution <ArrowRight size={14}/></Link>
               </div>
               <div className="flex-1 overflow-x-auto">
-                <table className="data-table w-full text-sm">
+                <table className="w-full text-left text-sm border-collapse whitespace-nowrap">
                   <thead>
-                    <tr><th>Identity Hash</th><th>Amount</th><th>Timestamp</th><th>Status</th></tr>
+                    <tr className="border-b border-[var(--border-subtle)] text-gray-400">
+                      <th className="pb-3 px-4 font-medium">Identity Hash</th>
+                      <th className="pb-3 px-4 font-medium">Amount</th>
+                      <th className="pb-3 px-4 font-medium">Timestamp</th>
+                      <th className="pb-3 px-4 font-medium">Status</th>
+                    </tr>
                   </thead>
                   <tbody className="text-xs">
                     {fetching ? (
@@ -133,14 +138,19 @@ export default function DashboardOverview() {
                        </tr>
                     ) : distributions.length === 0 ? (
                        <tr><td colSpan={4} className="text-center py-20 text-gray-600 italic">No records found for current disaster.</td></tr>
-                    ) : distributions.map((dist, i) => (
-                      <tr key={i}>
-                        <td className="font-mono text-gray-300">{dist.victim_id?.slice(0,12) || dist[1]?.slice(0,12)}...</td>
-                        <td className="text-[var(--gold)] font-bold">${Number(dist.amount)/10000000}.00</td>
-                        <td className="text-gray-500">{new Date(Number(dist.distributed_at)*1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
-                        <td><span className="badge badge-green">On-Chain ✓</span></td>
-                      </tr>
-                    ))}
+                    ) : distributions.map((dist, i) => {
+                      const vid = dist.victim_id || dist[1] || "Unknown";
+                      const amountRaw = dist.amount || dist[3] || 0;
+                      const dateRaw = dist.distributed_at || dist[5] || 0;
+                      return (
+                        <tr key={i} className="hover:bg-[rgba(255,255,255,0.02)] transition-colors border-b border-[rgba(255,255,255,0.02)]">
+                          <td className="py-3 px-4 font-mono text-gray-300">{String(vid).slice(0,12)}...</td>
+                          <td className="py-3 px-4 text-[var(--gold)] font-bold">${(Number(amountRaw)/10000000).toFixed(2)}</td>
+                          <td className="py-3 px-4 text-gray-500">{new Date(Number(dateRaw)*1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+                          <td className="py-3 px-4"><span className="badge badge-green">On-Chain ✓</span></td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

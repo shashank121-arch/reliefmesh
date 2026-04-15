@@ -10,12 +10,14 @@ import {
   Keypair,
   Operation,
   Transaction,
+  Horizon,
 } from "@stellar/stellar-sdk";
 
 const SOROBAN_RPC_URL = process.env.NEXT_PUBLIC_SOROBAN_RPC_URL || "https://soroban-testnet.stellar.org";
 const NETWORK_PASSPHRASE = Networks.TESTNET;
 
 export const server = new rpc.Server(SOROBAN_RPC_URL);
+export const horizonServer = new Horizon.Server(process.env.NEXT_PUBLIC_HORIZON_URL || "https://horizon-testnet.stellar.org");
 
 /**
  * Invokes a Soroban contract method.
@@ -74,7 +76,7 @@ export async function invokeContract({
     if (response.status === "PENDING") {
       // Poll for result
       let result = await server.getTransaction(response.hash);
-      while (result.status === "NOT_FOUND" || result.status === "PROCESSING") {
+      while (result.status === "NOT_FOUND") {
         await new Promise(resolve => setTimeout(resolve, 1000));
         result = await server.getTransaction(response.hash);
       }
@@ -88,7 +90,7 @@ export async function invokeContract({
       }
     }
     
-    return { hash: response.hash, success: response.status === "SUCCESS" };
+    return { hash: response.hash, success: false };
   } catch (error) {
     console.error("Contract invocation error:", error);
     throw error;
@@ -188,14 +190,14 @@ export async function invokeContractWithSecret({
     
     if (response.status === "PENDING") {
       let result = await server.getTransaction(response.hash);
-      while (result.status === "NOT_FOUND" || result.status === "PROCESSING") {
+      while (result.status === "NOT_FOUND") {
         await new Promise(resolve => setTimeout(resolve, 1000));
         result = await server.getTransaction(response.hash);
       }
       return { hash: response.hash, success: result.status === "SUCCESS" };
     }
     
-    return { hash: response.hash, success: response.status === "SUCCESS" };
+    return { hash: response.hash, success: false };
   } catch (error) {
     console.error("Secret contract invocation error:", error);
     throw error;
@@ -217,7 +219,7 @@ export async function transferAdmin({
   return await invokeContractWithSecret({
     contractId,
     method: "transfer_admin",
-    args: [new Address(Keypair.fromSecret(currentAdminSecret).publicKey()), new Address(newAdminAddress)],
+    args: [{ type: 'address', value: Keypair.fromSecret(currentAdminSecret).publicKey() }, { type: 'address', value: newAdminAddress }],
     secretKey: currentAdminSecret,
   });
 }
@@ -256,7 +258,7 @@ export function streamTransactions(
     };
 
     source.onerror = (err) => {
-      console.error("SSE connection error:", err);
+      // Quietly close on EventSource drops (usually 404 before account is fully synced)
       source?.close();
     };
   } catch (err) {

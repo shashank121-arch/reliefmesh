@@ -18,6 +18,7 @@ export default function VictimsPage() {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [victims, setVictims] = useState<any[]>([]);
+  const [selectedVictim, setSelectedVictim] = useState<any>(null);
 
   // Form State
   const [phone, setPhone] = useState('');
@@ -77,7 +78,7 @@ export default function VictimsPage() {
         contractId: process.env.NEXT_PUBLIC_VICTIM_REGISTRY_CONTRACT_ID!,
         method: 'register_victim',
         args: [
-           publicKey, // admin address
+           { type: 'address', value: publicKey }, // admin address
            victimId,
            identityHash,
            phoneHash,
@@ -139,15 +140,15 @@ export default function VictimsPage() {
       {/* TABLE */}
       <div className="glass-card overflow-hidden">
         <div className="overflow-x-auto">
-           <table className="data-table">
+           <table className="w-full text-left border-collapse whitespace-nowrap">
              <thead>
-               <tr>
-                 <th>Victim ID</th>
-                 <th>Disaster</th>
-                 <th>Aid Received</th>
-                 <th>Balance Available</th>
-                 <th>Status</th>
-                 <th>Actions</th>
+               <tr className="border-b border-[var(--border-subtle)] text-gray-400 text-sm">
+                 <th className="px-4 py-3 font-medium">Victim ID</th>
+                 <th className="px-4 py-3 font-medium">Disaster</th>
+                 <th className="px-4 py-3 font-medium">Aid Received</th>
+                 <th className="px-4 py-3 font-medium">Balance Available</th>
+                 <th className="px-4 py-3 font-medium">Status</th>
+                 <th className="px-4 py-3 font-medium text-right">Actions</th>
                </tr>
              </thead>
              <tbody>
@@ -164,13 +165,13 @@ export default function VictimsPage() {
                    </td>
                  </tr>
                ) : victims.map((victim: any, i: number) => (
-                 <tr key={i}>
-                   <td className="font-mono">{victim.id}</td>
-                   <td><span className="badge badge-gold">{victim.disaster}</span></td>
-                   <td className="text-white">${victim.received}.00</td>
-                   <td className="text-[var(--gold)] font-bold">${victim.available}.00</td>
-                   <td><span className={`badge ${victim.status === 'Active' ? 'badge-green' : 'badge-orange'}`}>{victim.status}</span></td>
-                   <td><button className="text-sm text-gray-400 hover:text-[var(--gold)] transition-colors">View Details</button></td>
+                 <tr key={i} className="border-b border-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.02)] transition-colors">
+                   <td className="px-4 py-4 font-mono text-gray-300">{victim.id}</td>
+                   <td className="px-4 py-4"><span className="badge badge-gold">{victim.disaster}</span></td>
+                   <td className="px-4 py-4 text-white">${victim.received.toFixed(2)}</td>
+                   <td className="px-4 py-4 text-[var(--gold)] font-bold">${victim.available.toFixed(2)}</td>
+                   <td className="px-4 py-4"><span className={`badge ${victim.status === 'Active' ? 'badge-green' : 'badge-orange'}`}>{victim.status}</span></td>
+                   <td className="px-4 py-4 text-right"><button onClick={() => setSelectedVictim(victim)} className="text-sm text-[var(--gold)] hover:text-white transition-colors font-medium">View Details</button></td>
                  </tr>
                ))}
              </tbody>
@@ -254,6 +255,48 @@ export default function VictimsPage() {
                 </div>
               </form>
           </div>
+        </div>
+      )}
+
+      {/* DETAILS MODAL */}
+      {selectedVictim && (
+        <div className="modal-overlay" onClick={() => setSelectedVictim(null)}>
+           <div className="modal-card glass-card gold-border animate-modal-in max-w-lg" onClick={e=>e.stopPropagation()}>
+              <h2 className="font-display italic text-2xl mb-6 flex items-center gap-2">
+                <Lock size={20} className="text-[var(--gold)]" /> Victim Dossier
+              </h2>
+              
+              <div className="space-y-4">
+                 <div className="flex justify-between items-center py-2 border-b border-[var(--border-subtle)]">
+                   <span className="text-gray-400 text-sm">ID Structure</span>
+                   <span className="font-mono text-white">{selectedVictim.id}</span>
+                 </div>
+                 <div className="flex justify-between items-center py-2 border-b border-[var(--border-subtle)]">
+                   <span className="text-gray-400 text-sm">Disaster Operation</span>
+                   <span className="badge badge-gold">{selectedVictim.disaster}</span>
+                 </div>
+                 <div className="flex justify-between items-center py-2 border-b border-[var(--border-subtle)]">
+                   <span className="text-gray-400 text-sm">Status</span>
+                   <span className={`badge ${selectedVictim.status === 'Active' ? 'badge-green' : 'badge-orange'}`}>{selectedVictim.status}</span>
+                 </div>
+                 <div className="flex justify-between items-center py-2 border-b border-[var(--border-subtle)]">
+                   <span className="text-gray-400 text-sm">Total Disbursed Aid</span>
+                   <span className="text-white font-mono">${selectedVictim.received.toFixed(2)}</span>
+                 </div>
+                 <div className="flex justify-between items-center py-2">
+                   <span className="text-gray-400 text-sm">Available Cashout</span>
+                   <span className="text-[var(--gold)] font-bold text-xl font-mono">${selectedVictim.available.toFixed(2)}</span>
+                 </div>
+                 <div className="bg-[rgba(167,139,113,0.05)] p-5 rounded-xl border border-[var(--border-gold)] mt-6 flex gap-3">
+                   <div className="text-xs text-gray-300 leading-relaxed">
+                     Due to Zero-Knowledge safeguards, personal metadata is heavily encrypted on the base layer. Verification relies exclusively on possession of the associated mobile device during local protocols.
+                   </div>
+                 </div>
+              </div>
+              <div className="mt-8 flex justify-end">
+                <button onClick={() => setSelectedVictim(null)} className="btn-outline px-6 py-2 rounded-full">Close Dossier</button>
+              </div>
+           </div>
         </div>
       )}
     </div>

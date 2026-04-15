@@ -1,9 +1,10 @@
 "use client"
 
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Globe, Users, Store, Zap, Settings, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, Globe, Users, Store, Zap, Settings, MessageSquare, DollarSign } from 'lucide-react';
 import { WalletConnect } from '@/components/ui/WalletConnect';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
@@ -16,6 +17,7 @@ export default function DashboardLayout({
 
   const navItems = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Overview" },
+    { href: "/dashboard/fund", icon: DollarSign, label: "Fund Pool" },
     { href: "/dashboard/distribute", icon: Globe, label: "Distribute Aid" },
     { href: "/dashboard/victims", icon: Users, label: "Victims" },
     { href: "/dashboard/shopkeepers", icon: Store, label: "Shopkeepers" },
@@ -30,10 +32,13 @@ export default function DashboardLayout({
       {/* LEFT SIDEBAR (desktop) */}
       <aside className="hidden md:flex w-[260px] bg-[rgba(10,10,10,0.9)] border-r border-[var(--border-subtle)] flex-col">
         <div className="p-6">
-          <Link href="/" className="font-display font-bold italic text-white text-2xl block mb-2 tracking-wide">
-            ReliefMesh
+          <Link href="/" className="flex items-center gap-3 mb-2">
+            <Image src="/logo.png" alt="ReliefMesh" width={36} height={36} className="rounded-lg" />
+            <div>
+              <span className="font-display font-bold italic text-white text-2xl tracking-wide block leading-none">ReliefMesh</span>
+              <span className="label-text text-[9px] opacity-70">Charity Command Center</span>
+            </div>
           </Link>
-          <div className="label-text text-[9px] opacity-70">Charity Command Center</div>
         </div>
 
         <nav className="flex-1 mt-6">

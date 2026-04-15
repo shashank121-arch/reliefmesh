@@ -2,6 +2,7 @@
 
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { WalletConnect } from '@/components/ui/WalletConnect';
 import SMSSimulator from '@/components/ui/SMSSimulator';
@@ -18,8 +19,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[var(--bg-primary)]">
       {/* SECTION 1 — FIXED NAVBAR */}
       <nav className="fixed top-0 left-0 right-0 h-[72px] bg-[rgba(10,10,10,0.8)] backdrop-blur-[20px] border-b border-[var(--border-subtle)] z-50 px-6 flex items-center justify-between">
-        <Link href="/" className="font-display font-bold italic text-white text-xl">
-          ReliefMesh
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image src="/logo.png" alt="ReliefMesh" width={32} height={32} className="rounded-lg" />
+          <span className="font-display font-bold italic text-white text-xl">ReliefMesh</span>
         </Link>
         
         <div className="hidden md:flex items-center gap-8 text-[11px] uppercase tracking-widest text-[rgba(255,255,255,0.5)]">
@@ -254,8 +256,9 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mb-16">
             <div className="col-span-1 md:col-span-1">
-              <Link href="/" className="font-display font-bold italic text-white text-2xl block mb-4">
-                ReliefMesh
+              <Link href="/" className="flex items-center gap-3 mb-4">
+                <Image src="/logo.png" alt="ReliefMesh" width={32} height={32} className="rounded-lg" />
+                <span className="font-display font-bold italic text-white text-2xl">ReliefMesh</span>
               </Link>
               <p className="text-sm text-gray-400 mb-6 max-w-xs">Connecting vital aid directly to victims. Zero corruption, transparent tracking.</p>
               <div className="flex gap-4">

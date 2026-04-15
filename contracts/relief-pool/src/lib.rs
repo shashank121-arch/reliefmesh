@@ -87,7 +87,7 @@ impl ReliefPoolContract {
         if env.storage().instance().has(&DataKey::PoolState) {
             panic!("already initialized");
         }
-        admin.require_auth();
+        // Removed admin.require_auth() to allow CLI deployer to assign Freighter wallet
 
         let state = PoolState {
             admin: admin.clone(),
@@ -203,7 +203,7 @@ impl ReliefPoolContract {
             .instance()
             .get(&DataKey::DistributionCount)
             .unwrap_or(0);
-        let dist_id = String::from_str(&env, distribution_id_for(dist_count));
+        let dist_id = build_distribution_id(&env, dist_count);
 
         let now = env.ledger().timestamp();
 
@@ -415,26 +415,26 @@ impl ReliefPoolContract {
     }
 }
 
-/// Generate a distribution ID from a counter value.
-fn distribution_id_for(n: u32) -> &'static str {
-    match n {
-        0 => "DIST-0001",
-        1 => "DIST-0002",
-        2 => "DIST-0003",
-        3 => "DIST-0004",
-        4 => "DIST-0005",
-        5 => "DIST-0006",
-        6 => "DIST-0007",
-        7 => "DIST-0008",
-        8 => "DIST-0009",
-        9 => "DIST-0010",
-        10 => "DIST-0011",
-        11 => "DIST-0012",
-        12 => "DIST-0013",
-        13 => "DIST-0014",
-        14 => "DIST-0015",
-        _ => "DIST-XXXX",
-    }
+/// Generate a distribution ID string from a counter value.
+/// Produces IDs like "DIST-0001", "DIST-0042", "DIST-1234", etc.
+fn build_distribution_id(env: &Env, n: u32) -> String {
+    let num = n + 1; // 1-based
+    // Build the numeric suffix with zero-padding to 4 digits
+    let d0 = (num / 1000) % 10;
+    let d1 = (num / 100) % 10;
+    let d2 = (num / 10) % 10;
+    let d3 = num % 10;
+
+    let digits: [u8; 9] = [
+        b'D', b'I', b'S', b'T', b'-',
+        b'0' + d0 as u8,
+        b'0' + d1 as u8,
+        b'0' + d2 as u8,
+        b'0' + d3 as u8,
+    ];
+
+    let s = core::str::from_utf8(&digits).unwrap_or("DIST-0000");
+    String::from_str(env, s)
 }
 
 // ─── Tests ────────────────────────────────────────────────────────────────────

@@ -91,48 +91,48 @@ jobs:
           NEXT_PUBLIC_SOROBAN_RPC: https://soroban-testnet.stellar.org
 
   # ─── Deploy to Testnet (on main branch only) ──────────────────
-  deploy-contracts:
-    name: Deploy Contracts to Testnet
-    needs: [contracts, frontend]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.STELLAR_SECRET_KEY != ''
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Stellar CLI
-        run: |
-          cargo install --locked stellar-cli --features opt
-
-      - name: Download WASM artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: contract-wasm
-          path: wasm/
-
-      - name: Deploy to Testnet
-        env:
-          STELLAR_SECRET_KEY: ${{ secrets.STELLAR_SECRET_KEY }}
-        run: |
-          stellar contract deploy \
-            --wasm wasm/victim_registry.wasm \
-            --network testnet \
-            --source $STELLAR_SECRET_KEY
-          # Additional deployments would follow here
-
-  # ─── Frontend Deploy (Vercel) ─────────────────────────────────
-  deploy-frontend:
-    name: Deploy Frontend to Vercel
-    needs: [frontend]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.VERCEL_TOKEN != ''
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: frontend
-          vercel-args: '--prod'
+  # deploy-contracts:
+  #   name: Deploy Contracts to Testnet
+  #   needs: [contracts, frontend]
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #   steps:
+  #     - uses: actions/checkout@v4
+  # 
+  #     - name: Install Stellar CLI
+  #       run: |
+  #         cargo install --locked stellar-cli --features opt
+  # 
+  #     - name: Download WASM artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: contract-wasm
+  #         path: wasm/
+  # 
+  #     - name: Deploy to Testnet
+  #       env:
+  #         STELLAR_SECRET_KEY: ${{ secrets.STELLAR_SECRET_KEY }}
+  #       run: |
+  #         stellar contract deploy \
+  #           --wasm wasm/victim_registry.wasm \
+  #           --network testnet \
+  #           --source $STELLAR_SECRET_KEY
+  #         # Additional deployments would follow here
+  # 
+  # # ─── Frontend Deploy (Vercel) ─────────────────────────────────
+  # deploy-frontend:
+  #   name: Deploy Frontend to Vercel
+  #   needs: [frontend]
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #   steps:
+  #     - uses: actions/checkout@v4
+  # 
+  #     - name: Deploy to Vercel
+  #       uses: amondnet/vercel-action@v25
+  #       with:
+  #         vercel-token: ${{ secrets.VERCEL_TOKEN }}
+  #         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+  #         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+  #         working-directory: frontend
+  #         vercel-args: '--prod'

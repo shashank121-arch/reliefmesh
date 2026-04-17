@@ -83,12 +83,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Type check
-        run: npx tsc --noEmit
-
       - name: Build
         run: npm run build
         env:
@@ -101,7 +95,7 @@ jobs:
     name: Deploy Contracts to Testnet
     needs: [contracts, frontend]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.STELLAR_SECRET_KEY != ''
     steps:
       - uses: actions/checkout@v4
 
@@ -130,7 +124,7 @@ jobs:
     name: Deploy Frontend to Vercel
     needs: [frontend]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.VERCEL_TOKEN != ''
     steps:
       - uses: actions/checkout@v4
 

@@ -1,6 +1,6 @@
 {
   "generators": {
-    "address": 5,
+    "address": 3,
     "nonce": 0
   },
   "auth": [
@@ -12,7 +12,7 @@
           "function": {
             "contract_fn": {
               "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-              "function_name": "initiate_clawback",
+              "function_name": "register_shopkeeper",
               "args": [
                 {
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
@@ -21,19 +21,22 @@
                   "string": "SK001"
                 },
                 {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
+                },
+                {
+                  "string": "Test Shop"
+                },
+                {
+                  "string": "Karachi"
+                },
+                {
+                  "string": "+92-300-0000000"
                 },
                 {
                   "i128": {
                     "hi": 0,
-                    "lo": 50000000
+                    "lo": 10000000000
                   }
-                },
-                {
-                  "string": "Price gouging reported"
-                },
-                {
-                  "string": "QmXyz123evidencehash"
                 }
               ]
             }
@@ -49,28 +52,13 @@
           "function": {
             "contract_fn": {
               "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-              "function_name": "initiate_clawback",
+              "function_name": "verify_shopkeeper",
               "args": [
                 {
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
                 },
                 {
                   "string": "SK001"
-                },
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM"
-                },
-                {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
-                },
-                {
-                  "string": "Price gouging reported"
-                },
-                {
-                  "string": "QmXyz123evidencehash"
                 }
               ]
             }
@@ -84,7 +72,7 @@
   "ledger": {
     "protocol_version": 21,
     "sequence_number": 0,
-    "timestamp": 1713370000,
+    "timestamp": 0,
     "network_id": "0000000000000000000000000000000000000000000000000000000000000000",
     "base_reserve": 0,
     "min_persistent_entry_ttl": 4096,
@@ -98,10 +86,10 @@
             "key": {
               "vec": [
                 {
-                  "symbol": "Case"
+                  "symbol": "LocationShopkeepers"
                 },
                 {
-                  "string": "CASE-0001"
+                  "string": "Karachi"
                 }
               ]
             },
@@ -118,94 +106,18 @@
                 "key": {
                   "vec": [
                     {
-                      "symbol": "Case"
+                      "symbol": "LocationShopkeepers"
                     },
                     {
-                      "string": "CASE-0001"
+                      "string": "Karachi"
                     }
                   ]
                 },
                 "durability": "persistent",
                 "val": {
-                  "map": [
+                  "vec": [
                     {
-                      "key": {
-                        "symbol": "amount"
-                      },
-                      "val": {
-                        "i128": {
-                          "hi": 0,
-                          "lo": 50000000
-                        }
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "case_id"
-                      },
-                      "val": {
-                        "string": "CASE-0001"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "created_at"
-                      },
-                      "val": {
-                        "u64": 1713370000
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "evidence_hash"
-                      },
-                      "val": {
-                        "string": "QmXyz123evidencehash"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "reason"
-                      },
-                      "val": {
-                        "string": "Price gouging reported"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "resolved_at"
-                      },
-                      "val": {
-                        "u64": 0
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "shopkeeper_id"
-                      },
-                      "val": {
-                        "string": "SK001"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "shopkeeper_wallet"
-                      },
-                      "val": {
-                        "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "status"
-                      },
-                      "val": {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      }
+                      "string": "SK001"
                     }
                   ]
                 }
@@ -223,132 +135,7 @@
             "key": {
               "vec": [
                 {
-                  "symbol": "Case"
-                },
-                {
-                  "string": "CASE-0002"
-                }
-              ]
-            },
-            "durability": "persistent"
-          }
-        },
-        [
-          {
-            "last_modified_ledger_seq": 0,
-            "data": {
-              "contract_data": {
-                "ext": "v0",
-                "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-                "key": {
-                  "vec": [
-                    {
-                      "symbol": "Case"
-                    },
-                    {
-                      "string": "CASE-0002"
-                    }
-                  ]
-                },
-                "durability": "persistent",
-                "val": {
-                  "map": [
-                    {
-                      "key": {
-                        "symbol": "amount"
-                      },
-                      "val": {
-                        "i128": {
-                          "hi": 0,
-                          "lo": 50000000
-                        }
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "case_id"
-                      },
-                      "val": {
-                        "string": "CASE-0002"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "created_at"
-                      },
-                      "val": {
-                        "u64": 1713370000
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "evidence_hash"
-                      },
-                      "val": {
-                        "string": "QmXyz123evidencehash"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "reason"
-                      },
-                      "val": {
-                        "string": "Price gouging reported"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "resolved_at"
-                      },
-                      "val": {
-                        "u64": 0
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "shopkeeper_id"
-                      },
-                      "val": {
-                        "string": "SK001"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "shopkeeper_wallet"
-                      },
-                      "val": {
-                        "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "status"
-                      },
-                      "val": {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              }
-            },
-            "ext": "v0"
-          },
-          4095
-        ]
-      ],
-      [
-        {
-          "contract_data": {
-            "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-            "key": {
-              "vec": [
-                {
-                  "symbol": "ShopkeeperCases"
+                  "symbol": "Shopkeeper"
                 },
                 {
                   "string": "SK001"
@@ -368,7 +155,7 @@
                 "key": {
                   "vec": [
                     {
-                      "symbol": "ShopkeeperCases"
+                      "symbol": "Shopkeeper"
                     },
                     {
                       "string": "SK001"
@@ -377,12 +164,111 @@
                 },
                 "durability": "persistent",
                 "val": {
-                  "vec": [
+                  "map": [
                     {
-                      "string": "CASE-0001"
+                      "key": {
+                        "symbol": "dispute_count"
+                      },
+                      "val": {
+                        "u32": 0
+                      }
                     },
                     {
-                      "string": "CASE-0002"
+                      "key": {
+                        "symbol": "id"
+                      },
+                      "val": {
+                        "string": "SK001"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_active"
+                      },
+                      "val": {
+                        "bool": true
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_verified"
+                      },
+                      "val": {
+                        "bool": true
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "location"
+                      },
+                      "val": {
+                        "string": "Karachi"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "max_daily_limit"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 10000000000
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "name"
+                      },
+                      "val": {
+                        "string": "Test Shop"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "phone"
+                      },
+                      "val": {
+                        "string": "+92-300-0000000"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "registered_at"
+                      },
+                      "val": {
+                        "u64": 0
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "today_cashouts"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "total_cashouts"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "wallet"
+                      },
+                      "val": {
+                        "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
+                      }
                     }
                   ]
                 }
@@ -420,6 +306,22 @@
                         "key": {
                           "vec": [
                             {
+                              "symbol": "ActiveShopkeepers"
+                            }
+                          ]
+                        },
+                        "val": {
+                          "vec": [
+                            {
+                              "string": "SK001"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "key": {
+                          "vec": [
+                            {
                               "symbol": "Admin"
                             }
                           ]
@@ -432,58 +334,12 @@
                         "key": {
                           "vec": [
                             {
-                              "symbol": "CaseCount"
+                              "symbol": "ShopkeeperCount"
                             }
                           ]
                         },
                         "val": {
-                          "u32": 2
-                        }
-                      },
-                      {
-                        "key": {
-                          "vec": [
-                            {
-                              "symbol": "PendingCases"
-                            }
-                          ]
-                        },
-                        "val": {
-                          "vec": [
-                            {
-                              "string": "CASE-0001"
-                            },
-                            {
-                              "string": "CASE-0002"
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "key": {
-                          "vec": [
-                            {
-                              "symbol": "TokenAddress"
-                            }
-                          ]
-                        },
-                        "val": {
-                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                        }
-                      },
-                      {
-                        "key": {
-                          "vec": [
-                            {
-                              "symbol": "TotalRecovered"
-                            }
-                          ]
-                        },
-                        "val": {
-                          "i128": {
-                            "hi": 0,
-                            "lo": 0
-                          }
+                          "u32": 1
                         }
                       }
                     ]
@@ -605,14 +461,7 @@
               }
             ],
             "data": {
-              "vec": [
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
-                },
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                }
-              ]
+              "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
             }
           }
         }
@@ -655,7 +504,7 @@
                 "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
               },
               {
-                "symbol": "initiate_clawback"
+                "symbol": "register_shopkeeper"
               }
             ],
             "data": {
@@ -667,19 +516,22 @@
                   "string": "SK001"
                 },
                 {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
+                },
+                {
+                  "string": "Test Shop"
+                },
+                {
+                  "string": "Karachi"
+                },
+                {
+                  "string": "+92-300-0000000"
                 },
                 {
                   "i128": {
                     "hi": 0,
-                    "lo": 50000000
+                    "lo": 10000000000
                   }
-                },
-                {
-                  "string": "Price gouging reported"
-                },
-                {
-                  "string": "QmXyz123evidencehash"
                 }
               ]
             }
@@ -697,25 +549,16 @@
           "v0": {
             "topics": [
               {
-                "symbol": "ClawbackInitiated"
+                "symbol": "ShopkeeperRegistered"
               }
             ],
             "data": {
               "vec": [
                 {
-                  "string": "CASE-0001"
-                },
-                {
                   "string": "SK001"
                 },
                 {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
-                },
-                {
-                  "u64": 1713370000
+                  "u64": 0
                 }
               ]
             }
@@ -736,11 +579,11 @@
                 "symbol": "fn_return"
               },
               {
-                "symbol": "initiate_clawback"
+                "symbol": "register_shopkeeper"
               }
             ],
             "data": {
-              "string": "CASE-0001"
+              "string": "SK001"
             }
           }
         }
@@ -762,7 +605,7 @@
                 "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
               },
               {
-                "symbol": "initiate_clawback"
+                "symbol": "verify_shopkeeper"
               }
             ],
             "data": {
@@ -772,21 +615,6 @@
                 },
                 {
                   "string": "SK001"
-                },
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM"
-                },
-                {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
-                },
-                {
-                  "string": "Price gouging reported"
-                },
-                {
-                  "string": "QmXyz123evidencehash"
                 }
               ]
             }
@@ -804,25 +632,16 @@
           "v0": {
             "topics": [
               {
-                "symbol": "ClawbackInitiated"
+                "symbol": "ShopkeeperVerified"
               }
             ],
             "data": {
               "vec": [
                 {
-                  "string": "CASE-0002"
-                },
-                {
                   "string": "SK001"
                 },
                 {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
-                },
-                {
-                  "u64": 1713370000
+                  "u64": 0
                 }
               ]
             }
@@ -843,33 +662,7 @@
                 "symbol": "fn_return"
               },
               {
-                "symbol": "initiate_clawback"
-              }
-            ],
-            "data": {
-              "string": "CASE-0002"
-            }
-          }
-        }
-      },
-      "failed_call": false
-    },
-    {
-      "event": {
-        "ext": "v0",
-        "contract_id": null,
-        "type_": "diagnostic",
-        "body": {
-          "v0": {
-            "topics": [
-              {
-                "symbol": "fn_call"
-              },
-              {
-                "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
-              },
-              {
-                "symbol": "get_pending_cases"
+                "symbol": "verify_shopkeeper"
               }
             ],
             "data": "void"
@@ -881,6 +674,32 @@
     {
       "event": {
         "ext": "v0",
+        "contract_id": null,
+        "type_": "diagnostic",
+        "body": {
+          "v0": {
+            "topics": [
+              {
+                "symbol": "fn_call"
+              },
+              {
+                "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
+              },
+              {
+                "symbol": "get_shopkeeper"
+              }
+            ],
+            "data": {
+              "string": "SK001"
+            }
+          }
+        }
+      },
+      "failed_call": false
+    },
+    {
+      "event": {
+        "ext": "v0",
         "contract_id": "0000000000000000000000000000000000000000000000000000000000000001",
         "type_": "diagnostic",
         "body": {
@@ -890,176 +709,115 @@
                 "symbol": "fn_return"
               },
               {
-                "symbol": "get_pending_cases"
+                "symbol": "get_shopkeeper"
               }
             ],
             "data": {
-              "vec": [
+              "map": [
                 {
-                  "map": [
-                    {
-                      "key": {
-                        "symbol": "amount"
-                      },
-                      "val": {
-                        "i128": {
-                          "hi": 0,
-                          "lo": 50000000
-                        }
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "case_id"
-                      },
-                      "val": {
-                        "string": "CASE-0001"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "created_at"
-                      },
-                      "val": {
-                        "u64": 1713370000
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "evidence_hash"
-                      },
-                      "val": {
-                        "string": "QmXyz123evidencehash"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "reason"
-                      },
-                      "val": {
-                        "string": "Price gouging reported"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "resolved_at"
-                      },
-                      "val": {
-                        "u64": 0
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "shopkeeper_id"
-                      },
-                      "val": {
-                        "string": "SK001"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "shopkeeper_wallet"
-                      },
-                      "val": {
-                        "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "status"
-                      },
-                      "val": {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      }
-                    }
-                  ]
+                  "key": {
+                    "symbol": "dispute_count"
+                  },
+                  "val": {
+                    "u32": 0
+                  }
                 },
                 {
-                  "map": [
-                    {
-                      "key": {
-                        "symbol": "amount"
-                      },
-                      "val": {
-                        "i128": {
-                          "hi": 0,
-                          "lo": 50000000
-                        }
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "case_id"
-                      },
-                      "val": {
-                        "string": "CASE-0002"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "created_at"
-                      },
-                      "val": {
-                        "u64": 1713370000
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "evidence_hash"
-                      },
-                      "val": {
-                        "string": "QmXyz123evidencehash"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "reason"
-                      },
-                      "val": {
-                        "string": "Price gouging reported"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "resolved_at"
-                      },
-                      "val": {
-                        "u64": 0
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "shopkeeper_id"
-                      },
-                      "val": {
-                        "string": "SK001"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "shopkeeper_wallet"
-                      },
-                      "val": {
-                        "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "status"
-                      },
-                      "val": {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      }
+                  "key": {
+                    "symbol": "id"
+                  },
+                  "val": {
+                    "string": "SK001"
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "is_active"
+                  },
+                  "val": {
+                    "bool": true
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "is_verified"
+                  },
+                  "val": {
+                    "bool": true
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "location"
+                  },
+                  "val": {
+                    "string": "Karachi"
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "max_daily_limit"
+                  },
+                  "val": {
+                    "i128": {
+                      "hi": 0,
+                      "lo": 10000000000
                     }
-                  ]
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "name"
+                  },
+                  "val": {
+                    "string": "Test Shop"
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "phone"
+                  },
+                  "val": {
+                    "string": "+92-300-0000000"
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "registered_at"
+                  },
+                  "val": {
+                    "u64": 0
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "today_cashouts"
+                  },
+                  "val": {
+                    "i128": {
+                      "hi": 0,
+                      "lo": 0
+                    }
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "total_cashouts"
+                  },
+                  "val": {
+                    "i128": {
+                      "hi": 0,
+                      "lo": 0
+                    }
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "wallet"
+                  },
+                  "val": {
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
+                  }
                 }
               ]
             }

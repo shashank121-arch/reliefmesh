@@ -403,14 +403,14 @@ mod tests {
 
     #[test]
     fn test_initialize() {
-        let (env, client, _) = setup();
+        let (_env, _client, _) = setup();
         // Just check it doesn't panic
     }
 
     #[test]
     #[should_panic(expected = "already initialized")]
     fn test_double_init_fails() {
-        let (env, client, admin) = setup();
+        let (_env, client, admin) = setup();
         client.initialize(&admin);
     }
 

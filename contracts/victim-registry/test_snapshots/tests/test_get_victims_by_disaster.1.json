@@ -1,6 +1,6 @@
 {
   "generators": {
-    "address": 5,
+    "address": 2,
     "nonce": 0
   },
   "auth": [
@@ -12,28 +12,22 @@
           "function": {
             "contract_fn": {
               "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-              "function_name": "initiate_clawback",
+              "function_name": "register_victim",
               "args": [
                 {
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
                 },
                 {
-                  "string": "SK001"
+                  "string": "V001"
                 },
                 {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                  "string": "h"
                 },
                 {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
+                  "string": "p"
                 },
                 {
-                  "string": "Price gouging reported"
-                },
-                {
-                  "string": "QmXyz123evidencehash"
+                  "string": "FLOOD_2024"
                 }
               ]
             }
@@ -49,28 +43,22 @@
           "function": {
             "contract_fn": {
               "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-              "function_name": "initiate_clawback",
+              "function_name": "register_victim",
               "args": [
                 {
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
                 },
                 {
-                  "string": "SK001"
+                  "string": "V002"
                 },
                 {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM"
+                  "string": "h"
                 },
                 {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
+                  "string": "p"
                 },
                 {
-                  "string": "Price gouging reported"
-                },
-                {
-                  "string": "QmXyz123evidencehash"
+                  "string": "FLOOD_2024"
                 }
               ]
             }
@@ -86,13 +74,22 @@
           "function": {
             "contract_fn": {
               "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-              "function_name": "approve_clawback",
+              "function_name": "register_victim",
               "args": [
                 {
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
                 },
                 {
-                  "string": "CASE-0001"
+                  "string": "V003"
+                },
+                {
+                  "string": "h"
+                },
+                {
+                  "string": "p"
+                },
+                {
+                  "string": "FLOOD_2024"
                 }
               ]
             }
@@ -108,57 +105,22 @@
           "function": {
             "contract_fn": {
               "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-              "function_name": "execute_clawback",
+              "function_name": "register_victim",
               "args": [
                 {
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
                 },
                 {
-                  "string": "CASE-0001"
-                }
-              ]
-            }
-          },
-          "sub_invocations": []
-        }
-      ]
-    ],
-    [
-      [
-        "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4",
-        {
-          "function": {
-            "contract_fn": {
-              "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-              "function_name": "approve_clawback",
-              "args": [
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                  "string": "V004"
                 },
                 {
-                  "string": "CASE-0002"
-                }
-              ]
-            }
-          },
-          "sub_invocations": []
-        }
-      ]
-    ],
-    [
-      [
-        "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4",
-        {
-          "function": {
-            "contract_fn": {
-              "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-              "function_name": "execute_clawback",
-              "args": [
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                  "string": "h"
                 },
                 {
-                  "string": "CASE-0002"
+                  "string": "p"
+                },
+                {
+                  "string": "QUAKE_2024"
                 }
               ]
             }
@@ -172,7 +134,7 @@
   "ledger": {
     "protocol_version": 21,
     "sequence_number": 0,
-    "timestamp": 1713370000,
+    "timestamp": 0,
     "network_id": "0000000000000000000000000000000000000000000000000000000000000000",
     "base_reserve": 0,
     "min_persistent_entry_ttl": 4096,
@@ -186,10 +148,10 @@
             "key": {
               "vec": [
                 {
-                  "symbol": "Case"
+                  "symbol": "DisasterVictims"
                 },
                 {
-                  "string": "CASE-0001"
+                  "string": "FLOOD_2024"
                 }
               ]
             },
@@ -206,10 +168,114 @@
                 "key": {
                   "vec": [
                     {
-                      "symbol": "Case"
+                      "symbol": "DisasterVictims"
                     },
                     {
-                      "string": "CASE-0001"
+                      "string": "FLOOD_2024"
+                    }
+                  ]
+                },
+                "durability": "persistent",
+                "val": {
+                  "vec": [
+                    {
+                      "string": "V001"
+                    },
+                    {
+                      "string": "V002"
+                    },
+                    {
+                      "string": "V003"
+                    }
+                  ]
+                }
+              }
+            },
+            "ext": "v0"
+          },
+          4095
+        ]
+      ],
+      [
+        {
+          "contract_data": {
+            "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+            "key": {
+              "vec": [
+                {
+                  "symbol": "DisasterVictims"
+                },
+                {
+                  "string": "QUAKE_2024"
+                }
+              ]
+            },
+            "durability": "persistent"
+          }
+        },
+        [
+          {
+            "last_modified_ledger_seq": 0,
+            "data": {
+              "contract_data": {
+                "ext": "v0",
+                "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+                "key": {
+                  "vec": [
+                    {
+                      "symbol": "DisasterVictims"
+                    },
+                    {
+                      "string": "QUAKE_2024"
+                    }
+                  ]
+                },
+                "durability": "persistent",
+                "val": {
+                  "vec": [
+                    {
+                      "string": "V004"
+                    }
+                  ]
+                }
+              }
+            },
+            "ext": "v0"
+          },
+          4095
+        ]
+      ],
+      [
+        {
+          "contract_data": {
+            "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+            "key": {
+              "vec": [
+                {
+                  "symbol": "Victim"
+                },
+                {
+                  "string": "V001"
+                }
+              ]
+            },
+            "durability": "persistent"
+          }
+        },
+        [
+          {
+            "last_modified_ledger_seq": 0,
+            "data": {
+              "contract_data": {
+                "ext": "v0",
+                "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+                "key": {
+                  "vec": [
+                    {
+                      "symbol": "Victim"
+                    },
+                    {
+                      "string": "V001"
                     }
                   ]
                 },
@@ -218,81 +284,72 @@
                   "map": [
                     {
                       "key": {
-                        "symbol": "amount"
+                        "symbol": "aid_available"
                       },
                       "val": {
                         "i128": {
                           "hi": 0,
-                          "lo": 50000000
+                          "lo": 0
                         }
                       }
                     },
                     {
                       "key": {
-                        "symbol": "case_id"
+                        "symbol": "aid_received"
                       },
                       "val": {
-                        "string": "CASE-0001"
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
                       }
                     },
                     {
                       "key": {
-                        "symbol": "created_at"
+                        "symbol": "disaster_code"
                       },
                       "val": {
-                        "u64": 1713370000
+                        "string": "FLOOD_2024"
                       }
                     },
                     {
                       "key": {
-                        "symbol": "evidence_hash"
+                        "symbol": "id"
                       },
                       "val": {
-                        "string": "QmXyz123evidencehash"
+                        "string": "V001"
                       }
                     },
                     {
                       "key": {
-                        "symbol": "reason"
+                        "symbol": "identity_hash"
                       },
                       "val": {
-                        "string": "Price gouging reported"
+                        "string": "h"
                       }
                     },
                     {
                       "key": {
-                        "symbol": "resolved_at"
+                        "symbol": "is_active"
                       },
                       "val": {
-                        "u64": 1713370000
+                        "bool": true
                       }
                     },
                     {
                       "key": {
-                        "symbol": "shopkeeper_id"
+                        "symbol": "phone_hash"
                       },
                       "val": {
-                        "string": "SK001"
+                        "string": "p"
                       }
                     },
                     {
                       "key": {
-                        "symbol": "shopkeeper_wallet"
+                        "symbol": "registered_at"
                       },
                       "val": {
-                        "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "status"
-                      },
-                      "val": {
-                        "vec": [
-                          {
-                            "symbol": "Executed"
-                          }
-                        ]
+                        "u64": 0
                       }
                     }
                   ]
@@ -311,10 +368,10 @@
             "key": {
               "vec": [
                 {
-                  "symbol": "Case"
+                  "symbol": "Victim"
                 },
                 {
-                  "string": "CASE-0002"
+                  "string": "V002"
                 }
               ]
             },
@@ -331,10 +388,10 @@
                 "key": {
                   "vec": [
                     {
-                      "symbol": "Case"
+                      "symbol": "Victim"
                     },
                     {
-                      "string": "CASE-0002"
+                      "string": "V002"
                     }
                   ]
                 },
@@ -343,81 +400,72 @@
                   "map": [
                     {
                       "key": {
-                        "symbol": "amount"
+                        "symbol": "aid_available"
                       },
                       "val": {
                         "i128": {
                           "hi": 0,
-                          "lo": 50000000
+                          "lo": 0
                         }
                       }
                     },
                     {
                       "key": {
-                        "symbol": "case_id"
+                        "symbol": "aid_received"
                       },
                       "val": {
-                        "string": "CASE-0002"
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
                       }
                     },
                     {
                       "key": {
-                        "symbol": "created_at"
+                        "symbol": "disaster_code"
                       },
                       "val": {
-                        "u64": 1713370000
+                        "string": "FLOOD_2024"
                       }
                     },
                     {
                       "key": {
-                        "symbol": "evidence_hash"
+                        "symbol": "id"
                       },
                       "val": {
-                        "string": "QmXyz123evidencehash"
+                        "string": "V002"
                       }
                     },
                     {
                       "key": {
-                        "symbol": "reason"
+                        "symbol": "identity_hash"
                       },
                       "val": {
-                        "string": "Price gouging reported"
+                        "string": "h"
                       }
                     },
                     {
                       "key": {
-                        "symbol": "resolved_at"
+                        "symbol": "is_active"
                       },
                       "val": {
-                        "u64": 1713370000
+                        "bool": true
                       }
                     },
                     {
                       "key": {
-                        "symbol": "shopkeeper_id"
+                        "symbol": "phone_hash"
                       },
                       "val": {
-                        "string": "SK001"
+                        "string": "p"
                       }
                     },
                     {
                       "key": {
-                        "symbol": "shopkeeper_wallet"
+                        "symbol": "registered_at"
                       },
                       "val": {
-                        "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM"
-                      }
-                    },
-                    {
-                      "key": {
-                        "symbol": "status"
-                      },
-                      "val": {
-                        "vec": [
-                          {
-                            "symbol": "Executed"
-                          }
-                        ]
+                        "u64": 0
                       }
                     }
                   ]
@@ -436,10 +484,10 @@
             "key": {
               "vec": [
                 {
-                  "symbol": "ShopkeeperCases"
+                  "symbol": "Victim"
                 },
                 {
-                  "string": "SK001"
+                  "string": "V003"
                 }
               ]
             },
@@ -456,21 +504,201 @@
                 "key": {
                   "vec": [
                     {
-                      "symbol": "ShopkeeperCases"
+                      "symbol": "Victim"
                     },
                     {
-                      "string": "SK001"
+                      "string": "V003"
                     }
                   ]
                 },
                 "durability": "persistent",
                 "val": {
-                  "vec": [
+                  "map": [
                     {
-                      "string": "CASE-0001"
+                      "key": {
+                        "symbol": "aid_available"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
                     },
                     {
-                      "string": "CASE-0002"
+                      "key": {
+                        "symbol": "aid_received"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "disaster_code"
+                      },
+                      "val": {
+                        "string": "FLOOD_2024"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "id"
+                      },
+                      "val": {
+                        "string": "V003"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "identity_hash"
+                      },
+                      "val": {
+                        "string": "h"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_active"
+                      },
+                      "val": {
+                        "bool": true
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "phone_hash"
+                      },
+                      "val": {
+                        "string": "p"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "registered_at"
+                      },
+                      "val": {
+                        "u64": 0
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "ext": "v0"
+          },
+          4095
+        ]
+      ],
+      [
+        {
+          "contract_data": {
+            "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+            "key": {
+              "vec": [
+                {
+                  "symbol": "Victim"
+                },
+                {
+                  "string": "V004"
+                }
+              ]
+            },
+            "durability": "persistent"
+          }
+        },
+        [
+          {
+            "last_modified_ledger_seq": 0,
+            "data": {
+              "contract_data": {
+                "ext": "v0",
+                "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+                "key": {
+                  "vec": [
+                    {
+                      "symbol": "Victim"
+                    },
+                    {
+                      "string": "V004"
+                    }
+                  ]
+                },
+                "durability": "persistent",
+                "val": {
+                  "map": [
+                    {
+                      "key": {
+                        "symbol": "aid_available"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "aid_received"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "disaster_code"
+                      },
+                      "val": {
+                        "string": "QUAKE_2024"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "id"
+                      },
+                      "val": {
+                        "string": "V004"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "identity_hash"
+                      },
+                      "val": {
+                        "string": "h"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_active"
+                      },
+                      "val": {
+                        "bool": true
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "phone_hash"
+                      },
+                      "val": {
+                        "string": "p"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "registered_at"
+                      },
+                      "val": {
+                        "u64": 0
+                      }
                     }
                   ]
                 }
@@ -520,51 +748,12 @@
                         "key": {
                           "vec": [
                             {
-                              "symbol": "CaseCount"
+                              "symbol": "VictimCount"
                             }
                           ]
                         },
                         "val": {
-                          "u32": 2
-                        }
-                      },
-                      {
-                        "key": {
-                          "vec": [
-                            {
-                              "symbol": "PendingCases"
-                            }
-                          ]
-                        },
-                        "val": {
-                          "vec": []
-                        }
-                      },
-                      {
-                        "key": {
-                          "vec": [
-                            {
-                              "symbol": "TokenAddress"
-                            }
-                          ]
-                        },
-                        "val": {
-                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                        }
-                      },
-                      {
-                        "key": {
-                          "vec": [
-                            {
-                              "symbol": "TotalRecovered"
-                            }
-                          ]
-                        },
-                        "val": {
-                          "i128": {
-                            "hi": 0,
-                            "lo": 100000000
-                          }
+                          "u32": 4
                         }
                       }
                     ]
@@ -632,72 +821,6 @@
                 "key": {
                   "ledger_key_nonce": {
                     "nonce": 1033654523790656264
-                  }
-                },
-                "durability": "temporary",
-                "val": "void"
-              }
-            },
-            "ext": "v0"
-          },
-          6311999
-        ]
-      ],
-      [
-        {
-          "contract_data": {
-            "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4",
-            "key": {
-              "ledger_key_nonce": {
-                "nonce": 2032731177588607455
-              }
-            },
-            "durability": "temporary"
-          }
-        },
-        [
-          {
-            "last_modified_ledger_seq": 0,
-            "data": {
-              "contract_data": {
-                "ext": "v0",
-                "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4",
-                "key": {
-                  "ledger_key_nonce": {
-                    "nonce": 2032731177588607455
-                  }
-                },
-                "durability": "temporary",
-                "val": "void"
-              }
-            },
-            "ext": "v0"
-          },
-          6311999
-        ]
-      ],
-      [
-        {
-          "contract_data": {
-            "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4",
-            "key": {
-              "ledger_key_nonce": {
-                "nonce": 4270020994084947596
-              }
-            },
-            "durability": "temporary"
-          }
-        },
-        [
-          {
-            "last_modified_ledger_seq": 0,
-            "data": {
-              "contract_data": {
-                "ext": "v0",
-                "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4",
-                "key": {
-                  "ledger_key_nonce": {
-                    "nonce": 4270020994084947596
                   }
                 },
                 "durability": "temporary",
@@ -818,14 +941,7 @@
               }
             ],
             "data": {
-              "vec": [
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
-                },
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                }
-              ]
+              "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
             }
           }
         }
@@ -868,7 +984,7 @@
                 "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
               },
               {
-                "symbol": "initiate_clawback"
+                "symbol": "register_victim"
               }
             ],
             "data": {
@@ -877,22 +993,16 @@
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
                 },
                 {
-                  "string": "SK001"
+                  "string": "V001"
                 },
                 {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                  "string": "h"
                 },
                 {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
+                  "string": "p"
                 },
                 {
-                  "string": "Price gouging reported"
-                },
-                {
-                  "string": "QmXyz123evidencehash"
+                  "string": "FLOOD_2024"
                 }
               ]
             }
@@ -910,25 +1020,19 @@
           "v0": {
             "topics": [
               {
-                "symbol": "ClawbackInitiated"
+                "symbol": "VictimRegistered"
               }
             ],
             "data": {
               "vec": [
                 {
-                  "string": "CASE-0001"
+                  "string": "V001"
                 },
                 {
-                  "string": "SK001"
+                  "string": "FLOOD_2024"
                 },
                 {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
-                },
-                {
-                  "u64": 1713370000
+                  "u64": 0
                 }
               ]
             }
@@ -949,11 +1053,11 @@
                 "symbol": "fn_return"
               },
               {
-                "symbol": "initiate_clawback"
+                "symbol": "register_victim"
               }
             ],
             "data": {
-              "string": "CASE-0001"
+              "string": "V001"
             }
           }
         }
@@ -975,7 +1079,7 @@
                 "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
               },
               {
-                "symbol": "initiate_clawback"
+                "symbol": "register_victim"
               }
             ],
             "data": {
@@ -984,22 +1088,16 @@
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
                 },
                 {
-                  "string": "SK001"
+                  "string": "V002"
                 },
                 {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM"
+                  "string": "h"
                 },
                 {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
+                  "string": "p"
                 },
                 {
-                  "string": "Price gouging reported"
-                },
-                {
-                  "string": "QmXyz123evidencehash"
+                  "string": "FLOOD_2024"
                 }
               ]
             }
@@ -1017,25 +1115,19 @@
           "v0": {
             "topics": [
               {
-                "symbol": "ClawbackInitiated"
+                "symbol": "VictimRegistered"
               }
             ],
             "data": {
               "vec": [
                 {
-                  "string": "CASE-0002"
+                  "string": "V002"
                 },
                 {
-                  "string": "SK001"
+                  "string": "FLOOD_2024"
                 },
                 {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
-                },
-                {
-                  "u64": 1713370000
+                  "u64": 0
                 }
               ]
             }
@@ -1056,11 +1148,11 @@
                 "symbol": "fn_return"
               },
               {
-                "symbol": "initiate_clawback"
+                "symbol": "register_victim"
               }
             ],
             "data": {
-              "string": "CASE-0002"
+              "string": "V002"
             }
           }
         }
@@ -1082,7 +1174,7 @@
                 "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
               },
               {
-                "symbol": "approve_clawback"
+                "symbol": "register_victim"
               }
             ],
             "data": {
@@ -1091,7 +1183,16 @@
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
                 },
                 {
-                  "string": "CASE-0001"
+                  "string": "V003"
+                },
+                {
+                  "string": "h"
+                },
+                {
+                  "string": "p"
+                },
+                {
+                  "string": "FLOOD_2024"
                 }
               ]
             }
@@ -1109,16 +1210,19 @@
           "v0": {
             "topics": [
               {
-                "symbol": "ClawbackApproved"
+                "symbol": "VictimRegistered"
               }
             ],
             "data": {
               "vec": [
                 {
-                  "string": "CASE-0001"
+                  "string": "V003"
                 },
                 {
-                  "u64": 1713370000
+                  "string": "FLOOD_2024"
+                },
+                {
+                  "u64": 0
                 }
               ]
             }
@@ -1139,10 +1243,12 @@
                 "symbol": "fn_return"
               },
               {
-                "symbol": "approve_clawback"
+                "symbol": "register_victim"
               }
             ],
-            "data": "void"
+            "data": {
+              "string": "V003"
+            }
           }
         }
       },
@@ -1163,7 +1269,7 @@
                 "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
               },
               {
-                "symbol": "execute_clawback"
+                "symbol": "register_victim"
               }
             ],
             "data": {
@@ -1172,7 +1278,16 @@
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
                 },
                 {
-                  "string": "CASE-0001"
+                  "string": "V004"
+                },
+                {
+                  "string": "h"
+                },
+                {
+                  "string": "p"
+                },
+                {
+                  "string": "QUAKE_2024"
                 }
               ]
             }
@@ -1190,25 +1305,19 @@
           "v0": {
             "topics": [
               {
-                "symbol": "ClawbackExecuted"
+                "symbol": "VictimRegistered"
               }
             ],
             "data": {
               "vec": [
                 {
-                  "string": "CASE-0001"
+                  "string": "V004"
                 },
                 {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                  "string": "QUAKE_2024"
                 },
                 {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
-                },
-                {
-                  "u64": 1713370000
+                  "u64": 0
                 }
               ]
             }
@@ -1229,10 +1338,12 @@
                 "symbol": "fn_return"
               },
               {
-                "symbol": "execute_clawback"
+                "symbol": "register_victim"
               }
             ],
-            "data": "void"
+            "data": {
+              "string": "V004"
+            }
           }
         }
       },
@@ -1253,45 +1364,11 @@
                 "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
               },
               {
-                "symbol": "approve_clawback"
+                "symbol": "get_victims_by_disaster"
               }
             ],
             "data": {
-              "vec": [
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
-                },
-                {
-                  "string": "CASE-0002"
-                }
-              ]
-            }
-          }
-        }
-      },
-      "failed_call": false
-    },
-    {
-      "event": {
-        "ext": "v0",
-        "contract_id": "0000000000000000000000000000000000000000000000000000000000000001",
-        "type_": "contract",
-        "body": {
-          "v0": {
-            "topics": [
-              {
-                "symbol": "ClawbackApproved"
-              }
-            ],
-            "data": {
-              "vec": [
-                {
-                  "string": "CASE-0002"
-                },
-                {
-                  "u64": 1713370000
-                }
-              ]
+              "string": "FLOOD_2024"
             }
           }
         }
@@ -1310,149 +1387,234 @@
                 "symbol": "fn_return"
               },
               {
-                "symbol": "approve_clawback"
-              }
-            ],
-            "data": "void"
-          }
-        }
-      },
-      "failed_call": false
-    },
-    {
-      "event": {
-        "ext": "v0",
-        "contract_id": null,
-        "type_": "diagnostic",
-        "body": {
-          "v0": {
-            "topics": [
-              {
-                "symbol": "fn_call"
-              },
-              {
-                "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
-              },
-              {
-                "symbol": "execute_clawback"
+                "symbol": "get_victims_by_disaster"
               }
             ],
             "data": {
               "vec": [
                 {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                  "map": [
+                    {
+                      "key": {
+                        "symbol": "aid_available"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "aid_received"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "disaster_code"
+                      },
+                      "val": {
+                        "string": "FLOOD_2024"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "id"
+                      },
+                      "val": {
+                        "string": "V001"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "identity_hash"
+                      },
+                      "val": {
+                        "string": "h"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_active"
+                      },
+                      "val": {
+                        "bool": true
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "phone_hash"
+                      },
+                      "val": {
+                        "string": "p"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "registered_at"
+                      },
+                      "val": {
+                        "u64": 0
+                      }
+                    }
+                  ]
                 },
                 {
-                  "string": "CASE-0002"
+                  "map": [
+                    {
+                      "key": {
+                        "symbol": "aid_available"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "aid_received"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "disaster_code"
+                      },
+                      "val": {
+                        "string": "FLOOD_2024"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "id"
+                      },
+                      "val": {
+                        "string": "V002"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "identity_hash"
+                      },
+                      "val": {
+                        "string": "h"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_active"
+                      },
+                      "val": {
+                        "bool": true
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "phone_hash"
+                      },
+                      "val": {
+                        "string": "p"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "registered_at"
+                      },
+                      "val": {
+                        "u64": 0
+                      }
+                    }
+                  ]
+                },
+                {
+                  "map": [
+                    {
+                      "key": {
+                        "symbol": "aid_available"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "aid_received"
+                      },
+                      "val": {
+                        "i128": {
+                          "hi": 0,
+                          "lo": 0
+                        }
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "disaster_code"
+                      },
+                      "val": {
+                        "string": "FLOOD_2024"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "id"
+                      },
+                      "val": {
+                        "string": "V003"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "identity_hash"
+                      },
+                      "val": {
+                        "string": "h"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_active"
+                      },
+                      "val": {
+                        "bool": true
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "phone_hash"
+                      },
+                      "val": {
+                        "string": "p"
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "registered_at"
+                      },
+                      "val": {
+                        "u64": 0
+                      }
+                    }
+                  ]
                 }
               ]
-            }
-          }
-        }
-      },
-      "failed_call": false
-    },
-    {
-      "event": {
-        "ext": "v0",
-        "contract_id": "0000000000000000000000000000000000000000000000000000000000000001",
-        "type_": "contract",
-        "body": {
-          "v0": {
-            "topics": [
-              {
-                "symbol": "ClawbackExecuted"
-              }
-            ],
-            "data": {
-              "vec": [
-                {
-                  "string": "CASE-0002"
-                },
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM"
-                },
-                {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 50000000
-                  }
-                },
-                {
-                  "u64": 1713370000
-                }
-              ]
-            }
-          }
-        }
-      },
-      "failed_call": false
-    },
-    {
-      "event": {
-        "ext": "v0",
-        "contract_id": "0000000000000000000000000000000000000000000000000000000000000001",
-        "type_": "diagnostic",
-        "body": {
-          "v0": {
-            "topics": [
-              {
-                "symbol": "fn_return"
-              },
-              {
-                "symbol": "execute_clawback"
-              }
-            ],
-            "data": "void"
-          }
-        }
-      },
-      "failed_call": false
-    },
-    {
-      "event": {
-        "ext": "v0",
-        "contract_id": null,
-        "type_": "diagnostic",
-        "body": {
-          "v0": {
-            "topics": [
-              {
-                "symbol": "fn_call"
-              },
-              {
-                "bytes": "0000000000000000000000000000000000000000000000000000000000000001"
-              },
-              {
-                "symbol": "get_total_recovered"
-              }
-            ],
-            "data": "void"
-          }
-        }
-      },
-      "failed_call": false
-    },
-    {
-      "event": {
-        "ext": "v0",
-        "contract_id": "0000000000000000000000000000000000000000000000000000000000000001",
-        "type_": "diagnostic",
-        "body": {
-          "v0": {
-            "topics": [
-              {
-                "symbol": "fn_return"
-              },
-              {
-                "symbol": "get_total_recovered"
-              }
-            ],
-            "data": {
-              "i128": {
-                "hi": 0,
-                "lo": 100000000
-              }
             }
           }
         }

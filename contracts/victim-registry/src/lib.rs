@@ -307,14 +307,14 @@ mod tests {
 
     #[test]
     fn test_initialize() {
-        let (env, client, admin) = setup();
+        let (_env, client, _admin) = setup();
         assert_eq!(client.get_victim_count(), 0);
     }
 
     #[test]
     #[should_panic(expected = "already initialized")]
     fn test_double_initialize_fails() {
-        let (env, client, admin) = setup();
+        let (env, client, _admin) = setup();
         let admin2 = Address::generate(&env);
         client.initialize(&admin2);
     }
@@ -449,16 +449,15 @@ mod tests {
     #[test]
     fn test_get_victims_by_disaster() {
         let (env, client, admin) = setup();
-        for i in 1..=3u32 {
-            let id = String::from_str(&env, &format!("V00{}", i));
-            client.register_victim(
-                &admin,
-                &id,
-                &str(&env, "h"),
-                &str(&env, "p"),
-                &str(&env, "FLOOD_2024"),
-            );
-        }
+        let vid1 = String::from_str(&env, "V001");
+        client.register_victim(&admin, &vid1, &str(&env, "h"), &str(&env, "p"), &str(&env, "FLOOD_2024"));
+        
+        let vid2 = String::from_str(&env, "V002");
+        client.register_victim(&admin, &vid2, &str(&env, "h"), &str(&env, "p"), &str(&env, "FLOOD_2024"));
+
+        let vid3 = String::from_str(&env, "V003");
+        client.register_victim(&admin, &vid3, &str(&env, "h"), &str(&env, "p"), &str(&env, "FLOOD_2024"));
+
         // Register one with different disaster
         client.register_victim(
             &admin,

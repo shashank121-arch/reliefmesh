@@ -443,15 +443,12 @@ fn build_distribution_id(env: &Env, n: u32) -> String {
 mod tests {
     use super::*;
     use soroban_sdk::{
-        testutils::{Address as _, MockAuth, MockAuthInvoke, AuthorizedFunction, AuthorizedInvocation},
+        testutils::Address as _,
         Address, Env, String, token,
-        IntoVal,
     };
 
-    // Minimal mock token for testing
-    mod token_contract {
-        soroban_sdk::contractimport!(file = "../../target/wasm32-unknown-unknown/release/soroban_token_contract.wasm");
-    }
+    // Mock token setup is handled via register_stellar_asset_contract_v2 in setup()
+
 
     fn setup() -> (Env, ReliefPoolContractClient<'static>, Address, Address, Address) {
         let env = Env::default();
@@ -459,7 +456,7 @@ mod tests {
 
         // Deploy mock token
         let admin = Address::generate(&env);
-        let token_admin = Address::generate(&env);
+        let _token_admin = Address::generate(&env);
 
         // Register a simple token contract (use stellar's test token)
         let token_id = env.register_stellar_asset_contract_v2(admin.clone())
@@ -508,7 +505,7 @@ mod tests {
 
     #[test]
     fn test_fund_pool() {
-        let (env, client, admin, token_id, contract_id) = setup();
+        let (env, client, admin, token_id, _contract_id) = setup();
 
         // Mint tokens to the charity
         let charity = Address::generate(&env);
@@ -524,7 +521,7 @@ mod tests {
 
     #[test]
     fn test_distribute_aid() {
-        let (env, client, admin, token_id, contract_id) = setup();
+        let (env, client, admin, token_id, _contract_id) = setup();
 
         // Fund pool first
         let charity = Address::generate(&env);
@@ -637,18 +634,18 @@ mod tests {
         token_client.mint(&charity, &1_000_000_000i128);
         client.fund_pool(&charity, &1_000_000_000i128, &str(&env, "FLOOD_2024"));
 
-        for i in 1..=3 {
-            let victim = Address::generate(&env);
-            let vid = String::from_str(&env, &format!("V00{}", i));
-            client.distribute_aid(
-                &admin,
-                &vid,
-                &victim,
-                &100_000_000i128,
-                &str(&env, "FLOOD_2024"),
-                &false,
-            );
-        }
+        let vid1 = String::from_str(&env, "V001");
+        let v1 = Address::generate(&env);
+        client.distribute_aid(&admin, &vid1, &v1, &100_000_000i128, &str(&env, "FLOOD_2024"), &false);
+
+        let vid2 = String::from_str(&env, "V002");
+        let v2 = Address::generate(&env);
+        client.distribute_aid(&admin, &vid2, &v2, &100_000_000i128, &str(&env, "FLOOD_2024"), &false);
+
+        let vid3 = String::from_str(&env, "V003");
+        let v3 = Address::generate(&env);
+        client.distribute_aid(&admin, &vid3, &v3, &100_000_000i128, &str(&env, "FLOOD_2024"), &false);
+
 
         let dists = client.get_distributions_by_disaster(&str(&env, "FLOOD_2024"));
         assert_eq!(dists.len(), 3);

@@ -383,11 +383,15 @@ fn build_case_id(env: &Env, n: u32) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use soroban_sdk::{testutils::Address as _, Address, Env, String};
+    use soroban_sdk::{testutils::Address as _, testutils::Ledger as _, Address, Env, String};
 
     fn setup() -> (Env, ClawbackControllerContractClient<'static>, Address, Address) {
         let env = Env::default();
         env.mock_all_auths();
+        
+        // Ensure non-zero timestamp for tests
+        env.ledger().with_mut(|li| li.timestamp = 1713370000);
+
         let contract_id = env.register_contract(None, ClawbackControllerContract);
         let client = ClawbackControllerContractClient::new(&env, &contract_id);
         let admin = Address::generate(&env);
@@ -422,7 +426,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "already initialized")]
     fn test_double_init_fails() {
-        let (env, client, admin, token) = setup();
+        let (_env, client, admin, token) = setup();
         client.initialize(&admin, &token);
     }
 

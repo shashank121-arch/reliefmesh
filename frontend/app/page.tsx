@@ -28,7 +28,7 @@ export default function LandingPage() {
           <Link href="#how-it-works" className="hover:text-[var(--gold)] transition-colors">How It Works</Link>
           <Link href="#features" className="hover:text-[var(--gold)] transition-colors">For Charities</Link>
           <Link href="#features" className="hover:text-[var(--gold)] transition-colors">For Victims</Link>
-          <a href="https://github.com/reliefmesh" className="hover:text-[var(--gold)] transition-colors">Docs</a>
+          <Link href="/docs" className="hover:text-[var(--gold)] transition-colors text-[var(--gold)]">Docs</Link>
         </div>
 
         <div className="flex items-center gap-4">
@@ -282,10 +282,10 @@ export default function LandingPage() {
             <div>
               <h4 className="text-white font-semibold mb-6">Developers</h4>
               <ul className="space-y-4 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-[var(--gold)] transition-colors">Documentation</a></li>
+                <li><Link href="/docs" className="hover:text-[var(--gold)] transition-colors">Documentation</Link></li>
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">Smart Contracts</a></li>
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">API</a></li>
-                <li><a href="https://github.com/reliefmesh" className="hover:text-[var(--gold)] transition-colors">GitHub Repository</a></li>
+                <li><a href="https://github.com/shashank121-arch/reliefmesh" className="hover:text-[var(--gold)] transition-colors">GitHub Repository</a></li>
               </ul>
             </div>
 

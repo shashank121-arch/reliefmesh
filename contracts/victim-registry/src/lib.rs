@@ -500,18 +500,21 @@ mod tests {
         assert!(!client.verify_victim(&str(&env, "V001"), &str(&env, "h")));
     }
 
+    // NOTE: Admin restrictions are disabled for demo/hackathon mode.
+    // Any wallet can register victims in the current deployment.
     #[test]
-    #[should_panic(expected = "unauthorized: admin only")]
-    fn test_non_admin_cannot_register() {
+    fn test_any_user_can_register_in_demo_mode() {
         let (env, client, _admin) = setup();
-        let attacker = Address::generate(&env);
+        let any_user = Address::generate(&env);
         client.register_victim(
-            &attacker,
-            &str(&env, "EVIL"),
+            &any_user,
+            &str(&env, "DEMO"),
             &str(&env, "h"),
             &str(&env, "p"),
             &str(&env, "D001"),
         );
+        let victim = client.get_victim(&str(&env, "DEMO"));
+        assert_eq!(victim.identity_hash, str(&env, "h"));
     }
 
     #[test]

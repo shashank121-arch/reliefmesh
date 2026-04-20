@@ -28,6 +28,7 @@ ReliefMesh is an institutional-grade disaster relief platform designed to elimin
 | **Relief Dashboard** | [https://reliefmesh.vercel.app](https://reliefmesh.vercel.app) |
 | **Technical Docs** | [https://reliefmesh.vercel.app/docs](https://reliefmesh.vercel.app/docs) |
 | **MVP Demo Video** | [Watch Walkthrough](https://www.loom.com/share/7f832fe9a4954247b2a7b114cdb57e43) |
+| **Feedback Form** | [Submit Product Feedback (Google Form)](https://docs.google.com/forms/d/e/1FAIpQLSd7VAiR-8_yJbHhRH0kOUBNObSsxqm4P4gO9pLvjXwhiG6u3Q/viewform) |
 | **Feedback Analysis** | [View user_onboarding_responses.csv](./user_onboarding_responses.csv) |
 
 ---
@@ -101,7 +102,7 @@ ReliefMesh has been successfully stress-tested by independent beta testers. This
 | **Nishit Bhalerao** | [`GBOALOA...NUKT`](https://stellar.expert/explorer/testnet/account/GBOALOAFBVSIH2Z2344H5Z2CXDPNLUIFTR4UKWBSMPY4TIF2GNUENUKT) | "Intuitive coordinator console." | ⭐⭐⭐⭐ |
 
 > [!NOTE]
-> **Full Feedback Record:** A complete audit trail including timestamps and full public keys is available in our [user_onboarding_responses.csv](./user_onboarding_responses.csv).
+> **Full Feedback Record:** A complete audit trail including timestamps and full public keys is available in our [user_onboarding_responses.csv](./user_onboarding_responses.csv). You can also submit new feedback via the [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSd7VAiR-8_yJbHhRH0kOUBNObSsxqm4P4gO9pLvjXwhiG6u3Q/viewform).
 
 ---
 

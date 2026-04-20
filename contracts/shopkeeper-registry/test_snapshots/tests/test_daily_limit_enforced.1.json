@@ -725,7 +725,7 @@
             "data": {
               "vec": [
                 {
-                  "string": "caught panic 'daily limit exceeded' from contract function 'Symbol(obj#207)'"
+                  "string": "caught panic 'daily limit exceeded' from contract function 'Symbol(obj#203)'"
                 },
                 {
                   "string": "SK001"

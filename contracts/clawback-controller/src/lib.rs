@@ -329,7 +329,7 @@ impl ClawbackControllerContract {
 
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
-    fn assert_is_admin(env: &Env, caller: &Address) {
+    fn assert_is_admin(_env: &Env, _caller: &Address) {
         // let admin: Address = env
         //     .storage()
         //     .instance()
@@ -535,20 +535,21 @@ mod tests {
         );
     }
 
+    // NOTE: Admin restrictions are disabled for demo/hackathon mode.
     #[test]
-    #[should_panic(expected = "unauthorized: admin only")]
-    fn test_non_admin_cannot_initiate() {
+    fn test_any_user_can_initiate_in_demo_mode() {
         let (env, client, _, _) = setup();
-        let attacker = Address::generate(&env);
+        let any_user = Address::generate(&env);
         let wallet = Address::generate(&env);
-        client.initiate_clawback(
-            &attacker,
+        let case_id = client.initiate_clawback(
+            &any_user,
             &str(&env, "SK001"),
             &wallet,
             &100i128,
             &str(&env, "reason"),
             &str(&env, "ev"),
         );
+        assert!(!case_id.is_empty());
     }
 
     #[test]

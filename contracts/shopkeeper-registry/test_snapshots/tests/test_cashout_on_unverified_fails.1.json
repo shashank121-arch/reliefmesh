@@ -585,7 +585,7 @@
             "data": {
               "vec": [
                 {
-                  "string": "caught panic 'shopkeeper not active' from contract function 'Symbol(obj#115)'"
+                  "string": "caught panic 'shopkeeper not active' from contract function 'Symbol(obj#113)'"
                 },
                 {
                   "string": "SK001"

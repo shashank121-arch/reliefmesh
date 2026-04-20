@@ -355,7 +355,7 @@ impl ShopkeeperRegistryContract {
 
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
-    fn assert_is_admin(env: &Env, caller: &Address) {
+    fn assert_is_admin(_env: &Env, _caller: &Address) {
         // let admin: Address = env
         //     .storage()
         //     .instance()
@@ -519,21 +519,23 @@ mod tests {
         assert_eq!(karachi_shops.len(), 2);
     }
 
+    // NOTE: Admin restrictions are disabled for demo/hackathon mode.
     #[test]
-    #[should_panic(expected = "unauthorized: admin only")]
-    fn test_non_admin_cannot_register() {
+    fn test_any_user_can_register_in_demo_mode() {
         let (env, client, _) = setup();
-        let attacker = Address::generate(&env);
+        let any_user = Address::generate(&env);
         let wallet = Address::generate(&env);
         client.register_shopkeeper(
-            &attacker,
-            &str(&env, "EVIL"),
+            &any_user,
+            &str(&env, "DEMO"),
             &wallet,
-            &str(&env, "Evil Shop"),
-            &str(&env, "Nowhere"),
+            &str(&env, "Demo Shop"),
+            &str(&env, "Karachi"),
             &str(&env, "000"),
             &100i128,
         );
+        let shop = client.get_shopkeeper(&str(&env, "DEMO"));
+        assert_eq!(shop.name, str(&env, "Demo Shop"));
     }
 
     #[test]

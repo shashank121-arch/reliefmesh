@@ -726,7 +726,7 @@
             "data": {
               "vec": [
                 {
-                  "string": "caught panic 'case is not pending' from contract function 'Symbol(obj#225)'"
+                  "string": "caught panic 'case is not pending' from contract function 'Symbol(obj#221)'"
                 },
                 {
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"

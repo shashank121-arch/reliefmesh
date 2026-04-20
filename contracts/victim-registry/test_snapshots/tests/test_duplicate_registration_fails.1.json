@@ -526,7 +526,7 @@
             "data": {
               "vec": [
                 {
-                  "string": "caught panic 'victim already registered' from contract function 'Symbol(obj#101)'"
+                  "string": "caught panic 'victim already registered' from contract function 'Symbol(obj#99)'"
                 },
                 {
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"

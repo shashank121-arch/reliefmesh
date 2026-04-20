@@ -272,7 +272,7 @@ impl VictimRegistryContract {
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
 
-    fn assert_is_admin(env: &Env, caller: &Address) {
+    fn assert_is_admin(_env: &Env, _caller: &Address) {
         // let admin: Address = env
         //     .storage()
         //     .instance()

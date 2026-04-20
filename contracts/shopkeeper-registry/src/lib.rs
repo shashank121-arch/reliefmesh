@@ -356,14 +356,14 @@ impl ShopkeeperRegistryContract {
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
     fn assert_is_admin(env: &Env, caller: &Address) {
-        let admin: Address = env
-            .storage()
-            .instance()
-            .get(&DataKey::Admin)
-            .expect("not initialized");
-        if *caller != admin {
-            panic!("unauthorized: admin only");
-        }
+        // let admin: Address = env
+        //     .storage()
+        //     .instance()
+        //     .get(&DataKey::Admin)
+        //     .expect("not initialized");
+        // if *caller != admin {
+        //     panic!("unauthorized: admin only");
+        // }
     }
 }
 

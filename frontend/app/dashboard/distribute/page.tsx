@@ -64,12 +64,16 @@ export default function DistributeAid() {
     } catch (err: any) {
       console.error(err);
       const msg = err?.message || '';
-      if (msg.includes('UnreachableCodeReached') || msg.includes('InvalidAction')) {
+      if (msg.includes('trustline') || msg.includes('#13')) {
+        alert("Distribution failed: The recipient wallet does not have a USDC trustline. The victim must complete the Onboard flow (Step 3: Establish Trustline) before they can receive USDC.");
+      } else if (msg.includes('UnreachableCodeReached') || msg.includes('InvalidAction')) {
         alert("Distribution failed: The relief pool likely has insufficient USDC balance. Please fund the pool first via the Fund Pool page.");
       } else if (msg.includes('unauthorized')) {
         alert("Distribution failed: Your wallet is not the contract admin.");
+      } else if (msg.includes('insufficient pool balance')) {
+        alert("Distribution failed: Insufficient pool balance. Please fund the pool first.");
       } else {
-        alert("Distribution failed. See console for details.");
+        alert("Distribution failed: " + (msg.length > 200 ? msg.substring(0, 200) + '...' : msg));
       }
     } finally {
       setLoading(false);

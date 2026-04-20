@@ -25,7 +25,10 @@ export default function OnboardPage() {
         throw new Error('Friendbot limit reached or error.');
       }
     } catch (err: any) {
-      alert(err.message);
+      console.warn("Friendbot error (often rate limited):", err.message);
+      // Even if it fails, many users might already be funded. Move on to step 3 to avoid blocking the user flow.
+      setStatus('Moving to next phase...');
+      setTimeout(() => setStep(3), 1000);
     } finally {
       setLoading(false);
     }

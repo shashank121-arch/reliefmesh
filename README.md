@@ -95,11 +95,13 @@ ReliefMesh has been successfully stress-tested by independent beta testers. This
 > [!NOTE]
 > **Testing Scope:** Transactions listed in this phase demonstrate the **Identity Onboarding** and **Trustline Approval** flows. Full contract distributions are performed in the live demo environment using the configured Admin accounts.
 
-| **Yash Annadate** | [`GBHHRIX...N4SJ`](https://stellar.expert/explorer/testnet/account/GBHHRIX4A4VKB74UCN76EZQI35VFIJ5RIXR3UO2XKUFUSV4JSUAYN4SJ) | "Incredibly smooth onboarding." | ⭐⭐⭐⭐⭐ |
-| **Thanchan Bhumij** | [`GCJXX4R...ZVBZ`](https://stellar.expert/explorer/testnet/account/GCJXX4RSJAMH2RVCOES46AJRNEE6NYSGA6I3YTVLCVQCMPG3FWCLZVBZ) | "Aid distribution in seconds." | ⭐⭐⭐⭐⭐ |
-| **Mrunal Ghorpade** | [`GCMAU6J...NAAS`](https://stellar.expert/explorer/testnet/account/GCMAU6JG7JTBQ6UCDZQU2ZJOMNNPNJIDVQ2IYHAH5LTIZAK6THXRNAAS) | "Straightforward funding flow." | ⭐⭐⭐⭐⭐ |
-| **Aditya Shisodiya** | [`GDONTRQ...J4QR`](https://stellar.expert/explorer/testnet/account/GDONTRQTWMUD5GELLKSBEXEZJ2VYB3FL2SC7HSQVXP4OZVUMFOTJ4LQR) | "Strong privacy focus." | ⭐⭐⭐⭐⭐ |
-| **Nishit Bhalerao** | [`GBOALOA...NUKT`](https://stellar.expert/explorer/testnet/account/GBOALOAFBVSIH2Z2344H5Z2CXDPNLUIFTR4UKWBSMPY4TIF2GNUENUKT) | "Intuitive coordinator console." | ⭐⭐⭐⭐ |
+| # | Beta Tester | Stellar Wallet (Testnet) | Overall Feedback | Rating |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | **Yash Annadate** | [`GBHHRIX...N4SJ`](https://stellar.expert/explorer/testnet/account/GBHHRIX4A4VKB74UCN76EZQI35VFIJ5RIXR3UO2XKUFUSV4JSUAYN4SJ) | "Incredibly smooth onboarding." | ⭐⭐⭐⭐⭐ |
+| 2 | **Thanchan Bhumij** | [`GCJXX4R...ZVBZ`](https://stellar.expert/explorer/testnet/account/GCJXX4RSJAMH2RVCOES46AJRNEE6NYSGA6I3YTVLCVQCMPG3FWCLZVBZ) | "Aid distribution in seconds." | ⭐⭐⭐⭐⭐ |
+| 3 | **Mrunal Ghorpade** | [`GCMAU6J...NAAS`](https://stellar.expert/explorer/testnet/account/GCMAU6JG7JTBQ6UCDZQU2ZJOMNNPNJIDVQ2IYHAH5LTIZAK6THXRNAAS) | "Straightforward funding flow." | ⭐⭐⭐⭐⭐ |
+| 4 | **Aditya Shisodiya** | [`GDONTRQ...J4QR`](https://stellar.expert/explorer/testnet/account/GDONTRQTWMUD5GELLKSBEXEZJ2VYB3FL2SC7HSQVXP4OZVUMFOTJ4LQR) | "Strong privacy focus." | ⭐⭐⭐⭐⭐ |
+| 5 | **Nishit Bhalerao** | [`GBOALOA...NUKT`](https://stellar.expert/explorer/testnet/account/GBOALOAFBVSIH2Z2344H5Z2CXDPNLUIFTR4UKWBSMPY4TIF2GNUENUKT) | "Intuitive coordinator console." | ⭐⭐⭐⭐ |
 
 > [!NOTE]
 > **Full Feedback Record:** A complete audit trail including timestamps and full public keys is available in our [user_onboarding_responses.csv](./user_onboarding_responses.csv). You can also submit new feedback via the [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSd7VAiR-8_yJbHhRH0kOUBNObSsxqm4P4gO9pLvjXwhiG6u3Q/viewform).

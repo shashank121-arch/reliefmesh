@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Lock, Search, PlusCircle, Loader2, ExternalLink } from 'lucide-react';
+import { Lock, Search, PlusCircle, Loader2, ExternalLink, CheckCircle } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
 import { invokeContract, queryContract } from '@/lib/stellar';
 

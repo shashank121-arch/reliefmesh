@@ -347,5 +347,5 @@ export default function ShopkeepersPage() {
         </div>
       )}
     </div>
-  )
-
+  );
+}

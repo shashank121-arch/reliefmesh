@@ -98,11 +98,11 @@ We engaged 5 unique users to test our infrastructure.
 
 | User Name | User Email | User Wallet Address |
 | :--- | :--- | :--- |
-| **Yash Annadate** | yash.annadate@example.com | `GBHHRIX...N4SJ` |
-| **Thanchan Bhumij** | thanchan.bhumij@example.com | `GCJXX4R...ZVBZ` |
-| **Mrunal Ghorpade** | mrunal.ghorpade@example.com | `GCMAU6J...NAAS` |
-| **Aditya Shisodiya** | aditya.shisodiya@example.com | `GDONTRQ...J4QR` |
-| **Nishit Bhalerao** | nishit.bhalerao@example.com | `GBOALOA...NUKT` |
+| **Yash Annadate** | yash.annadate@example.com | [`GBHHRIX...N4SJ`](https://stellar.expert/explorer/testnet/account/GBHHRIX4A4VKB74UCN76EZQI35VFIJ5RIXR3UO2XKUFUSV4JSUAYN4SJ) |
+| **Thanchan Bhumij** | thanchan.bhumij@example.com | [`GCJXX4R...ZVBZ`](https://stellar.expert/explorer/testnet/account/GCJXX4RSJAMH2RVCOES46AJRNEE6NYSGA6I3YTVLCVQCMPG3FWCLZVBZ) |
+| **Mrunal Ghorpade** | mrunal.ghorpade@example.com | [`GCMAU6J...NAAS`](https://stellar.expert/explorer/testnet/account/GCMAU6JG7JTBQ6UCDZQU2ZJOMNNPNJIDVQ2IYHAH5LTIZAK6THXRNAAS) |
+| **Aditya Shisodiya** | aditya.shisodiya@example.com | [`GDONTRQ...J4QR`](https://stellar.expert/explorer/testnet/account/GDONTRQTWMUD5GELLKSBEXEZJ2VYB3FL2SC7HSQVXP4OZVUMFOTJ4LQR) |
+| **Nishit Bhalerao** | nishit.bhalerao@example.com | [`GBOALOA...NUKT`](https://stellar.expert/explorer/testnet/account/GBOALOAFBVSIH2Z2344H5Z2CXDPNLUIFTR4UKWBSMPY4TIF2GNUENUKT) |
 
 ## User Feedback Summary
 
@@ -113,11 +113,11 @@ We engaged 5 unique users to test our infrastructure.
 
 | Feedback Received | Change Made | Commit |
 |---|---|---|
-| App purpose not clear | Added How It Works section | 5acfca2 |
-| Numbers confusing | Added stat tooltips | f8d8d91 |
-| New users confused | Added getting started banner | d04f189 |
-| No confirmation shown | Added TX success screen | 7cfbfc4 |
-| Contact link broken | Fixed mailto link | fc22f2b |
+| App purpose not clear | Added How It Works section | [`5acfca2`](https://github.com/shashank121-arch/reliefmesh/commit/5acfca223dd43136587091899e72d121dbd28092) |
+| Numbers confusing | Added stat tooltips | [`f8d8d91`](https://github.com/shashank121-arch/reliefmesh/commit/f8d8d91778c746aa2aebd3c4a1dd176a732cd589) |
+| New users confused | Added getting started banner | [`d04f189`](https://github.com/shashank121-arch/reliefmesh/commit/d04f18968908c714f914a40ee28b5ea70feb02ec) |
+| No confirmation shown | Added TX success screen | [`7cfbfc4`](https://github.com/shashank121-arch/reliefmesh/commit/7cfbfc49b45a6a7bdcc4041a865a9d56f452ad9f) |
+| Contact link broken | Fixed mailto link | [`fc22f2b`](https://github.com/shashank121-arch/reliefmesh/commit/fc22f2b98bb61e16ec87fb1916c524fad02de73a) |
 
 ### Next Phase Improvements
 Based on feedback we plan to:

@@ -78,6 +78,28 @@ export default function DashboardOverview() {
         )}
       </div>
 
+      {/* GETTING STARTED BANNER */}
+      {!fetching && (poolBalance === "0.00" || poolBalance === "0") && victimCount === 0 && (
+         <div className="glass-card mb-2 p-6 border-[var(--gold)] bg-[rgba(167,139,113,0.05)]">
+           <h3 className="text-xl font-bold text-white mb-2">Welcome! Getting Started with ReliefMesh:</h3>
+           <p className="text-gray-400 text-sm mb-4">Follow these 3 steps to begin your disaster relief operation:</p>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+             <div className="p-4 bg-[var(--bg-elevated)] rounded-lg border border-[var(--border-subtle)]">
+                <div className="text-[var(--gold)] font-bold mb-2">1. Fund Pool</div>
+                <div className="text-xs text-gray-400">Navigate to 'Fund Pool' and deposit testnet USDC into the secure smart contract.</div>
+             </div>
+             <div className="p-4 bg-[var(--bg-elevated)] rounded-lg border border-[var(--border-subtle)]">
+                <div className="text-[var(--gold)] font-bold mb-2">2. Register Victims</div>
+                <div className="text-xs text-gray-400">Use the 'Victims' tab to securely enroll citizens in need using SMS verification.</div>
+             </div>
+             <div className="p-4 bg-[var(--bg-elevated)] rounded-lg border border-[var(--border-subtle)]">
+                <div className="text-[var(--gold)] font-bold mb-2">3. Distribute Aid</div>
+                <div className="text-xs text-gray-400">Instantly send digital aid to verified victims through the 'Distribute' tab.</div>
+             </div>
+           </div>
+         </div>
+      )}
+
       {/* ALERT */}
       {pendingCases > 0 && (
          <div className="glass-card border-[var(--orange)] bg-[rgba(245,158,11,0.05)] p-4 flex items-center justify-between">

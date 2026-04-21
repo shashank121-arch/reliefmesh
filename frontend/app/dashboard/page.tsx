@@ -99,12 +99,12 @@ export default function DashboardOverview() {
              <StatSkeleton />
            </>
          ) : (
-           <>
-             <StatCard label="Pool Available" value={`$${poolBalance}`} sub="USDC" color="gold" />
-             <StatCard label="Victims Registered" value={victimCount} sub="Verified Citizens" color="gold" />
-             <StatCard label="Dispute Rate" value={`${pendingCases}`} sub="Active Cases" color="red" />
-             <StatCard label="Shopkeeper Hubs" value={shopkeeperCount} sub="Local Partners" color="emerald" />
-           </>
+            <>
+              <StatCard label="Pool Available" value={`$${poolBalance}`} sub="USDC" color="gold" tooltip="Total USDC available for immediate distribution to victims." />
+              <StatCard label="Victims Registered" value={victimCount} sub="Verified Citizens" color="gold" tooltip="Total number of victims that have completed SMS registration." />
+              <StatCard label="Dispute Rate" value={`${pendingCases}`} sub="Active Cases" color="red" tooltip="Number of open fraud reports against shopkeepers awaiting administrative clawback." />
+              <StatCard label="Shopkeeper Hubs" value={shopkeeperCount} sub="Local Partners" color="emerald" tooltip="Number of active shopkeepers ready to exchange digital aid for goods." />
+            </>
          )}
       </div>
 
@@ -226,17 +226,28 @@ export default function DashboardOverview() {
   );
 }
 
-function StatCard({ label, value, sub, color }: any) {
+function StatCard({ label, value, sub, color, tooltip }: any) {
   const colorMap: any = {
     gold: 'text-[var(--gold)]',
     emerald: 'text-[var(--emerald)]',
     red: 'text-[var(--red)]'
   };
   return (
-    <div className="glass-card p-6">
-      <div className="label-text mb-2 opacity-60 uppercase">{label}</div>
+    <div className="glass-card p-6 relative group">
+      <div className="label-text mb-2 opacity-60 uppercase flex items-center justify-between cursor-help">
+         <span>{label}</span>
+         {tooltip && (
+           <span className="text-gray-400 opacity-50 ml-2">ⓘ</span>
+         )}
+      </div>
       <div className={`font-display italic text-3xl ${colorMap[color] || 'text-white'}`}>{value}</div>
       <div className="text-gray-500 text-[10px] mt-2 uppercase tracking-widest">{sub}</div>
+      
+      {tooltip && (
+        <div className="absolute bottom-full left-0 mb-2 w-full p-2 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-gray-300 text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none shadow-lg">
+          {tooltip}
+        </div>
+      )}
     </div>
   );
 }

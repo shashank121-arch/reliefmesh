@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Store, AlertTriangle, CheckCircle, PlusCircle, Loader2 } from 'lucide-react';
+import { Store, AlertTriangle, CheckCircle, PlusCircle, Loader2, ExternalLink } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
 import { invokeContract, queryContract } from '@/lib/stellar';
 
@@ -12,6 +12,8 @@ export default function ShopkeepersPage() {
   const [fetching, setFetching] = useState(true);
   const [selectedSK, setSelectedSK] = useState<any>(null);
   const [shopkeepers, setShopkeepers] = useState<any[]>([]);
+  const [successAction, setSuccessAction] = useState<'flag' | 'add' | null>(null);
+  const [txHash, setTxHash] = useState('');
 
   // Flag Form State
   const [reason, setReason] = useState('Price Gouging (taking cut of aid)');
@@ -78,7 +80,8 @@ export default function ShopkeepersPage() {
       });
 
       if (result.success) {
-        alert(`Shopkeeper ${selectedSK.id} has been flagged. Dispute documented on-chain.`);
+        setTxHash(result.hash);
+        setSuccessAction('flag');
         setIsFlagModalOpen(false);
         fetchShopkeepers();
       }
@@ -128,7 +131,8 @@ export default function ShopkeepersPage() {
              console.error("Auto-verify failed, but SK is registered:", err);
           }
 
-          alert("Shopkeeper added and verified successfully.");
+          setTxHash(result.hash);
+          setSuccessAction('add');
           setIsAddModalOpen(false);
           // Wait briefly for ledger close then fetch
           setTimeout(() => fetchShopkeepers(), 1000);
@@ -313,7 +317,35 @@ export default function ShopkeepersPage() {
            </div>
         </div>
       )}
+
+      {/* SUCCESS MODALS */}
+      {successAction === 'flag' && (
+        <div className="modal-overlay" onClick={() => setSuccessAction(null)}>
+           <div className="modal-card glass-card gold-border animate-modal-in text-center flex flex-col items-center p-10" onClick={e=>e.stopPropagation()}>
+              <CheckCircle className="text-[var(--orange)] mb-4" size={60} />
+              <h2 className="font-display italic text-2xl mb-2">Shopkeeper Flagged</h2>
+              <p className="text-gray-400 text-sm mb-6">Dispute documented securely on-chain.</p>
+              <div className="w-full flex flex-col gap-3">
+                 <button onClick={() => setSuccessAction(null)} className="btn-outline">Close</button>
+                 <a href={`https://stellar.expert/explorer/testnet/tx/${txHash}`} target="_blank" rel="noopener noreferrer" className="btn-gold flex items-center justify-center gap-2">View Tx on Explorer <ExternalLink size={16}/></a>
+              </div>
+           </div>
+        </div>
+      )}
+
+      {successAction === 'add' && (
+        <div className="modal-overlay" onClick={() => setSuccessAction(null)}>
+           <div className="modal-card glass-card gold-border animate-modal-in text-center flex flex-col items-center p-10" onClick={e=>e.stopPropagation()}>
+              <CheckCircle className="text-[var(--gold)] mb-4" size={60} />
+              <h2 className="font-display italic text-2xl mb-2">Shopkeeper Added</h2>
+              <p className="text-gray-400 text-sm mb-6">Location registered and recorded on-chain.</p>
+              <div className="w-full flex flex-col gap-3">
+                 <button onClick={() => setSuccessAction(null)} className="btn-outline">Close</button>
+                 <a href={`https://stellar.expert/explorer/testnet/tx/${txHash}`} target="_blank" rel="noopener noreferrer" className="btn-gold flex items-center justify-center gap-2">View Tx on Explorer <ExternalLink size={16}/></a>
+              </div>
+           </div>
+        </div>
+      )}
     </div>
   )
-}
 

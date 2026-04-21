@@ -10,6 +10,7 @@ export default function OnboardPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
+  const [txHash, setTxHash] = useState('');
 
   // Step 2: Friendbot
   const fundWallet = async () => {
@@ -61,6 +62,7 @@ export default function OnboardPage() {
       const response = await horizonServer.submitTransaction(TransactionBuilder.fromXDR(signedXdr, Networks.TESTNET) as Transaction);
       
       if (response.successful) {
+        setTxHash(response.hash);
         setStatus('USDC Trustline Established!');
         setTimeout(() => setStep(4), 1500);
       } else {
@@ -172,6 +174,19 @@ export default function OnboardPage() {
                        <span className="text-[var(--gold)] font-mono text-sm">0.00</span>
                     </div>
                  </div>
+
+                 {txHash && (
+                    <div className="text-center mb-4">
+                      <a
+                        href={`https://stellar.expert/explorer/testnet/tx/${txHash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-500 hover:text-[var(--gold)] inline-flex items-center gap-1"
+                      >
+                        View Tx on Explorer <ExternalLink size={14} />
+                      </a>
+                    </div>
+                 )}
 
                  <div className="flex gap-4">
                     <a href="https://stellar.org/faucet" target="_blank" className="btn-outline flex-1 py-3 text-xs">Get USDC Faucet</a>

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Lock, Search, PlusCircle, Loader2 } from 'lucide-react';
+import { Lock, Search, PlusCircle, Loader2, ExternalLink } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
 import { invokeContract, queryContract } from '@/lib/stellar';
 
@@ -19,6 +19,8 @@ export default function VictimsPage() {
   const [fetching, setFetching] = useState(true);
   const [victims, setVictims] = useState<any[]>([]);
   const [selectedVictim, setSelectedVictim] = useState<any>(null);
+  const [success, setSuccess] = useState(false);
+  const [txHash, setTxHash] = useState('');
 
   // Form State
   const [phone, setPhone] = useState('');
@@ -89,8 +91,8 @@ export default function VictimsPage() {
       });
 
       if (result.success) {
-        alert("Victim registered successfully!");
-        setIsModalOpen(false);
+        setTxHash(result.hash);
+        setSuccess(true);
         // Reset form
         setPhone('');
         setNationalId('');
@@ -180,7 +182,7 @@ export default function VictimsPage() {
       </div>
 
       {/* MODAL */}
-      {isModalOpen && (
+      {isModalOpen && !success && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="modal-card glass-card gold-border animate-modal-in" onClick={e => e.stopPropagation()}>
              <h2 className="font-display italic text-3xl mb-6">Register New Victim</h2>
@@ -255,6 +257,19 @@ export default function VictimsPage() {
                 </div>
               </form>
           </div>
+        </div>
+      {/* SUCCESS MODAL */}
+      {success && (
+        <div className="modal-overlay" onClick={() => { setSuccess(false); setIsModalOpen(false); fetchVictims() }}>
+           <div className="modal-card glass-card gold-border animate-modal-in text-center flex flex-col items-center p-10" onClick={e=>e.stopPropagation()}>
+              <CheckCircle className="text-[var(--gold)] mb-4" size={60} />
+              <h2 className="font-display italic text-2xl mb-2">Victim Registered Successfully</h2>
+              <p className="text-gray-400 text-sm mb-6">Identity hash stored securely on-chain.</p>
+              <div className="w-full flex flex-col gap-3">
+                 <button onClick={() => { setSuccess(false); setIsModalOpen(false); fetchVictims() }} className="btn-outline">Close</button>
+                 <a href={`https://stellar.expert/explorer/testnet/tx/${txHash}`} target="_blank" rel="noopener noreferrer" className="btn-gold flex items-center justify-center gap-2">View Tx on Explorer <ExternalLink size={16}/></a>
+              </div>
+           </div>
         </div>
       )}
 

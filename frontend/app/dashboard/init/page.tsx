@@ -9,6 +9,7 @@ export default function InitPool() {
   const { publicKey, signTransaction } = useWallet();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [txHash, setTxHash] = useState('');
 
   const handleInitialize = async () => {
     if (!publicKey) return alert('Connect wallet first');
@@ -30,6 +31,7 @@ export default function InitPool() {
       });
 
       if (result.success) {
+        setTxHash(result.hash);
         setSuccess(true);
       }
     } catch (err: any) {
@@ -46,7 +48,19 @@ export default function InitPool() {
         <CheckCircle className="text-[var(--gold)] mb-6" size={80} />
         <h1 className="text-3xl mb-4">Contract Initialized!</h1>
         <p className="text-gray-400 mb-8">Your Freighter wallet is now the official Admin of the Relief Pool.</p>
-        <a href="/dashboard/fund" className="btn-gold">Go to Fund Pool</a>
+        <div className="flex flex-col items-center gap-4">
+          <a href="/dashboard/fund" className="btn-gold">Go to Fund Pool</a>
+          {txHash && (
+            <a
+              href={`https://stellar.expert/explorer/testnet/tx/${txHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-gray-500 hover:text-[var(--gold)] flex items-center gap-1"
+            >
+              View Tx on Explorer
+            </a>
+          )}
+        </div>
       </div>
     );
   }

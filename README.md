@@ -104,28 +104,27 @@ We engaged 5 unique users to test our infrastructure.
 | **Aditya Shisodiya** | aditya.shisodiya@example.com | `GDONTRQ...J4QR` |
 | **Nishit Bhalerao** | nishit.bhalerao@example.com | `GBOALOA...NUKT` |
 
-### User Feedback & Implementation
+## User Feedback Summary
 
-To collect comprehensive user feedback, we employed a [Product Feedback Google Form](https://docs.google.com/forms/d/e/1FAIpQLSd7VAiR-8_yJbHhRH0kOUBNObSsxqm4P4gO9pLvjXwhiG6u3Q/viewform). 
-The form requires users to submit their Name, Wallet Address, and Email ID alongside specific questions regarding their experience:
-1. Is there any feature they think this product is lacking?
-2. Did you find any bugs/errors/issues while using this app?
-3. Do you think this dApp is able to solve the issue it's targeting?
-4. How straightforward was the trustline establishment for the smart contract?
+### Google Form
+[Product Feedback Google Form](https://docs.google.com/forms/d/e/1FAIpQLSd7VAiR-8_yJbHhRH0kOUBNObSsxqm4P4gO9pLvjXwhiG6u3Q/viewform)
 
-Based on their responses, we immediately applied adjustments to the codebase (padding, copy clarity, placeholder texts). 
+### What We Changed Based on Feedback
 
-| User Name | User Email | User Wallet Address | Commit ID |
-| :--- | :--- | :--- | :--- |
-| **Yash Annadate** | yash.annadate@example.com | `GBHHRIX...N4SJ` | `fc22f2b` |
-| **Thanchan Bhumij** | thanchan.bhumij@example.com | `GCJXX4R...ZVBZ` | `fc22f2b` |
-| **Mrunal Ghorpade** | mrunal.ghorpade@example.com | `GCMAU6J...NAAS` | `fc22f2b` |
-| **Aditya Shisodiya** | aditya.shisodiya@example.com | `GDONTRQ...J4QR` | `fc22f2b` |
-| **Nishit Bhalerao** | nishit.bhalerao@example.com | `GBOALOA...NUKT` | `fc22f2b` |
+| Feedback Received | Change Made | Commit |
+|---|---|---|
+| App purpose not clear | Added How It Works section | 5acfca2 |
+| Numbers confusing | Added stat tooltips | f8d8d91 |
+| New users confused | Added getting started banner | d04f189 |
+| No confirmation shown | Added TX success screen | 7cfbfc4 |
+| Contact link broken | Fixed mailto link | fc22f2b |
 
-> [!NOTE]
-> **Full Data:** The historical responses and logs are tracked locally in our feedback registry.
-
+### Next Phase Improvements
+Based on feedback we plan to:
+1. Add SMS simulation for offline victims
+2. Add multi-language support for India
+3. Add disaster event management
+4. Improve mobile experience
 ---
 
 ## 🚀 Product Evolution & Roadmap

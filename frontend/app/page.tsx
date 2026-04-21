@@ -128,35 +128,38 @@ export default function LandingPage() {
       {/* SECTION 3 — HOW IT WORKS */}
       <section id="how-it-works" className="section relative">
         <p className="section-label label-text">THE PROCESS</p>
-        <h2 className="section-heading text-white">Aid in 4 Simple Steps</h2>
+        <h2 className="section-heading text-white">How ReliefMesh Works (For Everyone)</h2>
+        <p className="text-gray-400 text-center max-w-2xl mx-auto mb-12">
+          We ensure real people get the help they need in four simple, secure steps. You don't need to understand blockchain to use it.
+        </p>
 
         <div className="grid-2">
           <div className="glass-card p-8">
             <div className="font-display font-bold text-5xl text-[var(--gold)] mb-6 opacity-80">01</div>
             <div className="icon-container mb-6"><Globe size={24} /></div>
-            <h3 className="font-body font-bold text-xl text-white mb-3">Charity Funds Pool</h3>
-            <p className="text-sm text-gray-400">Organization deposits USDC into the ReliefMesh smart contract pool on Stellar</p>
+            <h3 className="font-body font-bold text-xl text-white mb-3">Charities Pool Funds</h3>
+            <p className="text-sm text-gray-400">Verified charities upload their relief funds into a secure, global digital vault. These funds can't be touched by anyone except the actual victims.</p>
           </div>
           
           <div className="glass-card p-8">
             <div className="font-display font-bold text-5xl text-[var(--gold)] mb-6 opacity-80">02</div>
             <div className="icon-container mb-6"><Users size={24} /></div>
-            <h3 className="font-body font-bold text-xl text-white mb-3">Victims Registered</h3>
-            <p className="text-sm text-gray-400">Aid workers register victims using SMS. Identity protected by ZK commitment hashes</p>
+            <h3 className="font-body font-bold text-xl text-white mb-3">Victims Enroll via SMS</h3>
+            <p className="text-sm text-gray-400">People in disaster zones sign up using just a basic text message. Their identities are protected—no sensitive private data is ever exposed publicly.</p>
           </div>
 
           <div className="glass-card p-8">
             <div className="font-display font-bold text-5xl text-[var(--gold)] mb-6 opacity-80">03</div>
             <div className="icon-container mb-6"><Zap size={24} /></div>
-            <h3 className="font-body font-bold text-xl text-white mb-3">Instant Distribution</h3>
-            <p className="text-sm text-gray-400">USDC sent directly to victim Stellar wallets. No bank required. Settlement in 5 seconds.</p>
+            <h3 className="font-body font-bold text-xl text-white mb-3">Money Gets Sent Directly</h3>
+            <p className="text-sm text-gray-400">Help is delivered straight to the victim's digital wallet in seconds. No waiting for banks, no standing in lines, and zero middlemen involved.</p>
           </div>
 
           <div className="glass-card p-8">
             <div className="font-display font-bold text-5xl text-[var(--gold)] mb-6 opacity-80">04</div>
             <div className="icon-container mb-6"><Shield size={24} /></div>
-            <h3 className="font-body font-bold text-xl text-white mb-3">Corruption Prevented</h3>
-            <p className="text-sm text-gray-400">If shopkeeper price-gouges, charity uses blockchain clawback to instantly recover funds</p>
+            <h3 className="font-body font-bold text-xl text-white mb-3">Safe & Local Exchange</h3>
+            <p className="text-sm text-gray-400">Victims can exchange their digital funds for food, water, or cash at verified local shops. If a shop acts unfairly, our system easily pulls the money back to protect victims.</p>
           </div>
         </div>
       </section>

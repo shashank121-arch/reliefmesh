@@ -238,7 +238,7 @@ export default function LandingPage() {
       </section>
 
       {/* SECTION 6 — CTA SECTION */}
-      <section className="section pb-32">
+      <section className="section pb-40">
         <div className="glass-card gold-border gold-glow p-12 md:p-20 text-center max-w-[700px] mx-auto rounded-3xl">
           <h2 className="font-display italic text-4xl md:text-[48px] text-white mb-6">Ready to Help?</h2>
           <p className="text-gray-400 text-base md:text-lg mb-10">
@@ -260,7 +260,7 @@ export default function LandingPage() {
                 <Image src="/logo.png" alt="ReliefMesh" width={32} height={32} className="rounded-lg" />
                 <span className="font-display font-bold italic text-white text-2xl">ReliefMesh</span>
               </Link>
-              <p className="text-sm text-gray-400 mb-6 max-w-xs">Connecting vital aid directly to victims. Zero corruption, transparent tracking.</p>
+              <p className="text-sm text-gray-400 mb-6 max-w-xs">Connecting vital aid directly to victims. Zero-Corruption Guarantee, transparent tracking.</p>
               <div className="flex gap-4">
                  {/* Social placeholders */}
                  <a href="#" className="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:gold-border text-gray-400 hover:text-[var(--gold)] transition-colors">𝕏</a>
@@ -294,7 +294,7 @@ export default function LandingPage() {
               <ul className="space-y-4 text-sm text-gray-400">
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">About</a></li>
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">Mission</a></li>
-                <li><a href="#" className="hover:text-[var(--gold)] transition-colors">Contact</a></li>
+                <li><a href="mailto:contact@reliefmesh.org" className="hover:text-[var(--gold)] transition-colors">Contact</a></li>
                 <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSd7VAiR-8_yJbHhRH0kOUBNObSsxqm4P4gO9pLvjXwhiG6u3Q/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--gold)] transition-colors text-[var(--gold)]">Beta Feedback</a></li>
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">Privacy Policy</a></li>
               </ul>
@@ -303,7 +303,7 @@ export default function LandingPage() {
             <div>
               <h4 className="text-white font-semibold mb-6">Join Newsletter</h4>
               <div className="flex bg-[var(--bg-glass)] border border-[var(--border-subtle)] rounded-xl overflow-hidden focus-within:border-[var(--gold)] transition-colors">
-                 <input type="email" placeholder="Your email address" className="bg-transparent text-white px-4 py-3 flex-1 text-sm outline-none placeholder:text-gray-600" />
+                 <input type="email" placeholder="hello@example.com" className="bg-transparent text-white px-4 py-3 flex-1 text-sm outline-none placeholder:text-gray-600" />
                  <button className="bg-[var(--gold-gradient)] text-black px-4 py-3 aspect-square flex items-center justify-center hover:brightness-110"><ArrowRight size={18}/></button>
               </div>
             </div>

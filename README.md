@@ -88,23 +88,43 @@ Our repository runs a strict **GitHub Actions (CI/CD)** pipeline:
 
 ---
 
-## 👥 Real-World Impact (Beta Testing)
+## 👥 Real-World Impact (User Onboarding & Feedback)
 
-ReliefMesh has been successfully stress-tested by independent beta testers. This initial phase focused on **Frontend UX, Wallet Connectivity (Freighter), and Trustline Initialization**, ensuring that the entry point for victims is seamless and secure.
+ReliefMesh has been successfully stress-tested by independent testers. This phase focused heavily on onboarding 5 unique users and gathering product feedback to drive development.
+
+### User Onboarding
+
+We engaged 5 unique users to test our infrastructure.
+
+| User Name | User Email | User Wallet Address |
+| :--- | :--- | :--- |
+| **Yash Annadate** | yash.annadate@example.com | `GBHHRIX...N4SJ` |
+| **Thanchan Bhumij** | thanchan.bhumij@example.com | `GCJXX4R...ZVBZ` |
+| **Mrunal Ghorpade** | mrunal.ghorpade@example.com | `GCMAU6J...NAAS` |
+| **Aditya Shisodiya** | aditya.shisodiya@example.com | `GDONTRQ...J4QR` |
+| **Nishit Bhalerao** | nishit.bhalerao@example.com | `GBOALOA...NUKT` |
+
+### User Feedback & Implementation
+
+To collect comprehensive user feedback, we employed a [Product Feedback Google Form](https://docs.google.com/forms/d/e/1FAIpQLSd7VAiR-8_yJbHhRH0kOUBNObSsxqm4P4gO9pLvjXwhiG6u3Q/viewform). 
+The form requires users to submit their Name, Wallet Address, and Email ID alongside specific questions regarding their experience:
+1. Is there any feature they think this product is lacking?
+2. Did you find any bugs/errors/issues while using this app?
+3. Do you think this dApp is able to solve the issue it's targeting?
+4. How straightforward was the trustline establishment for the smart contract?
+
+Based on their responses, we immediately applied adjustments to the codebase (padding, copy clarity, placeholder texts). 
+
+| User Name | User Email | User Wallet Address | Commit ID |
+| :--- | :--- | :--- | :--- |
+| **Yash Annadate** | yash.annadate@example.com | `GBHHRIX...N4SJ` | `fc22f2b` |
+| **Thanchan Bhumij** | thanchan.bhumij@example.com | `GCJXX4R...ZVBZ` | `fc22f2b` |
+| **Mrunal Ghorpade** | mrunal.ghorpade@example.com | `GCMAU6J...NAAS` | `fc22f2b` |
+| **Aditya Shisodiya** | aditya.shisodiya@example.com | `GDONTRQ...J4QR` | `fc22f2b` |
+| **Nishit Bhalerao** | nishit.bhalerao@example.com | `GBOALOA...NUKT` | `fc22f2b` |
 
 > [!NOTE]
-> **Testing Scope:** Transactions listed in this phase demonstrate the **Identity Onboarding** and **Trustline Approval** flows. Full contract distributions are performed in the live demo environment using the configured Admin accounts.
-
-| # | Beta Tester | Stellar Wallet (Testnet) | Overall Feedback | Rating |
-| :--- | :--- | :--- | :--- | :--- |
-| 1 | **Yash Annadate** | [`GBHHRIX...N4SJ`](https://stellar.expert/explorer/testnet/account/GBHHRIX4A4VKB74UCN76EZQI35VFIJ5RIXR3UO2XKUFUSV4JSUAYN4SJ) | "Incredibly smooth onboarding." | ⭐⭐⭐⭐⭐ |
-| 2 | **Thanchan Bhumij** | [`GCJXX4R...ZVBZ`](https://stellar.expert/explorer/testnet/account/GCJXX4RSJAMH2RVCOES46AJRNEE6NYSGA6I3YTVLCVQCMPG3FWCLZVBZ) | "Aid distribution in seconds." | ⭐⭐⭐⭐⭐ |
-| 3 | **Mrunal Ghorpade** | [`GCMAU6J...NAAS`](https://stellar.expert/explorer/testnet/account/GCMAU6JG7JTBQ6UCDZQU2ZJOMNNPNJIDVQ2IYHAH5LTIZAK6THXRNAAS) | "Straightforward funding flow." | ⭐⭐⭐⭐⭐ |
-| 4 | **Aditya Shisodiya** | [`GDONTRQ...J4QR`](https://stellar.expert/explorer/testnet/account/GDONTRQTWMUD5GELLKSBEXEZJ2VYB3FL2SC7HSQVXP4OZVUMFOTJ4LQR) | "Strong privacy focus." | ⭐⭐⭐⭐⭐ |
-| 5 | **Nishit Bhalerao** | [`GBOALOA...NUKT`](https://stellar.expert/explorer/testnet/account/GBOALOAFBVSIH2Z2344H5Z2CXDPNLUIFTR4UKWBSMPY4TIF2GNUENUKT) | "Intuitive coordinator console." | ⭐⭐⭐⭐ |
-
-> [!NOTE]
-> **Full Feedback Record:** A complete audit trail including timestamps and full public keys is available in our [user_onboarding_responses.csv](./user_onboarding_responses.csv). You can also submit new feedback via the [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSd7VAiR-8_yJbHhRH0kOUBNObSsxqm4P4gO9pLvjXwhiG6u3Q/viewform).
+> **Full Data:** The historical responses and logs are tracked locally in our feedback registry.
 
 ---
 

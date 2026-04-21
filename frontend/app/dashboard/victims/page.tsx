@@ -258,6 +258,7 @@ export default function VictimsPage() {
               </form>
           </div>
         </div>
+      )}
       {/* SUCCESS MODAL */}
       {success && (
         <div className="modal-overlay" onClick={() => { setSuccess(false); setIsModalOpen(false); fetchVictims() }}>

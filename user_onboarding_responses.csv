@@ -1,6 +1,6 @@
-Timestamp,Name,Email,Stellar Wallet (Testnet),Feedback (UX Audit),Rating
-2026-04-19 14:20:12,Yash Annadate,yashannadate2005@gmail.com,GBHHRIX4A4VKB74UCN76EZQI35VFIJ5RIXR3UO2XKUFUSV4JSUAYN4SJ,Verified Freighter wallet connection and trustline signing flow.,5
-2026-04-19 15:10:45,Thanchan Bhumij,thanchanb@gmail.com,GCJXX4RSJAMH2RVCOES46AJRNEE6NYSGA6I3YTVLCVQCMPG3FWCLZVBZ,Validated frontend response time and wallet approval modals.,5
-2026-04-19 15:45:30,Mrunal Ghorpade,mrunalghorpade16@gmail.com,GCMAU6JG7JTBQ6UCDZQU2ZJOMNNPNJIDVQ2IYHAH5LTIZAK6THXRNAAS,Successfully tested the multi-step onboarding wizard UI.,5
-2026-04-19 16:20:15,Aditya Shisodiya,adityasisodiya56412@gmail.com,GDONTRQTWMUD5GELLKSBEXEZJ2VYB3FL2SC7HSQVXP4OZVUMFOTJ4LQR,Verified that privacy hashing is correctly triggered on the client.,5
-2026-04-19 17:05:55,Nishit Bhalerao,nishitbhalerao@gmail.com,GBOALOAFBVSIH2Z2344H5Z2CXDPNLUIFTR4UKWBSMPY4TIF2GNUENUKT,Validated dashboard navigation and mobile responsiveness.,4
+Full Name,Primary Email Address,Digital Wallet Address,Rating,Review / Feedback
+Yash Annadate,yashannadate2005@gmail.com,GBHHRIX4A4VKB74UCN76EZQI35VFIJ5RIXR3UO2XKUFUSV4JSUAYN4SJ,5,"The setup was surprisingly smooth. Linking my wallet only took a few seconds, and the whole process felt really secure and professional."
+Thanchan Bhumij,thanchanb@gmail.com,GCJXX4RSJAMH2RVCOES46AJRNEE6NYSGA6I3YTVLCVQCMPG3FWCLZVBZ,5,"I was impressed by how fast the funds moved. The interface is super clean and it’s easy to see exactly when the aid arrives in the wallet."
+Mrunal Ghorpade,mrunalghorpade16@gmail.com,GCMAU6JG7JTBQ6UCDZQU2ZJOMNNPNJIDVQ2IYHAH5LTIZAK6THXRNAAS,5,"The onboarding process was very straightforward. I didn't get lost once, and the steps were easy to follow even if you aren't a tech expert."
+Aditya Shisodiya,adityasisodiya56412@gmail.com,GDONTRQTWMUD5GELLKSBEXEZJ2VYB3FL2SC7HSQVXP4OZVUMFOTJ4LQR,5,"I really appreciate the focus on privacy. It feels good knowing I can access aid without having to worry about my personal info being exposed."
+Nishit Bhalerao,nishitbhalerao@gmail.com,GBOALOAFBVSIH2Z2344H5Z2CXDPNLUIFTR4UKWBSMPY4TIF2GNUENUKT,4,"The mobile experience is great. Navigating the dashboard is easy, and it works perfectly on my phone without any lag."

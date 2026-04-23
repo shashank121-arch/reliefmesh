@@ -29,7 +29,7 @@ export default function FeedbackPage() {
 
            <div className="rounded-2xl overflow-hidden bg-white/5 border border-white/10 min-h-[800px] relative">
               <iframe
-                src="https://docs.google.com/forms/d/e/1FAIpQLSfD_lS_B_I7NndjL8qFpDEXXv-qR7E3QWl2O-96VfCqU_e_0A/viewform?embedded=true"
+                src="https://docs.google.com/forms/d/e/1FAIpQLSeorizQkfROi-zPbnD7yZMFkUUJ_kNpSrGuL-pEfGxaM7JliQ/viewform?embedded=true"
                 width="100%"
                 height="800"
                 frameBorder="0"

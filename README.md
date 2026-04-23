@@ -28,7 +28,8 @@ ReliefMesh is an institutional-grade disaster relief platform designed to elimin
 | **Relief Dashboard** | [https://reliefmesh.vercel.app](https://reliefmesh.vercel.app) |
 | **Technical Docs** | [https://reliefmesh.vercel.app/docs](https://reliefmesh.vercel.app/docs) |
 | **MVP Demo Video** | [Watch Walkthrough](https://www.loom.com/share/7f832fe9a4954247b2a7b114cdb57e43) |
-| **Feedback Form** | [Submit Product Feedback (Google Form)](https://docs.google.com/forms/d/e/1FAIpQLSeKBhe6bMRT539A8m2yglpgnhrqJrIxArxBG97fbtopclh49w/viewform?usp=publish-editor) |
+| **Feedback Form** | [Submit Product Feedback (Google Form)](https://docs.google.com/forms/d/e/1FAIpQLSeorizQkfROi-zPbnD7yZMFkUUJ_kNpSrGuL-pEfGxaM7JliQ/viewform?usp=header) |
+| **Response Sheet** | [View Live Feedback Responses](https://docs.google.com/spreadsheets/d/1PSzye-wuJ-IERrbvngL_10ZXESR9Wfln2hqRRMXbNpI/edit?gid=176044406#gid=176044406) |
 | **Feedback Analysis** | [View user_onboarding_responses.csv](./user_onboarding_responses.csv) |
 
 ---
@@ -107,7 +108,10 @@ We engaged 5 unique users to test our infrastructure.
 ## User Feedback Summary
 
 ### Google Form
-[Product Feedback Google Form](https://docs.google.com/forms/d/e/1FAIpQLSeKBhe6bMRT539A8m2yglpgnhrqJrIxArxBG97fbtopclh49w/viewform?usp=publish-editor)
+[Product Feedback Google Form](https://docs.google.com/forms/d/e/1FAIpQLSeorizQkfROi-zPbnD7yZMFkUUJ_kNpSrGuL-pEfGxaM7JliQ/viewform?usp=header)
+
+### Live Responses
+[Feedback Response Sheet](https://docs.google.com/spreadsheets/d/1PSzye-wuJ-IERrbvngL_10ZXESR9Wfln2hqRRMXbNpI/edit?gid=176044406#gid=176044406)
 
 ### What We Changed Based on Feedback
 

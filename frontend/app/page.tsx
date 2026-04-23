@@ -298,7 +298,7 @@ export default function LandingPage() {
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">About</a></li>
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">Mission</a></li>
                 <li><a href="mailto:contact@reliefmesh.org" className="hover:text-[var(--gold)] transition-colors">Contact</a></li>
-                <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSd7VAiR-8_yJbHhRH0kOUBNObSsxqm4P4gO9pLvjXwhiG6u3Q/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--gold)] transition-colors text-[var(--gold)]">Beta Feedback</a></li>
+                <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSeorizQkfROi-zPbnD7yZMFkUUJ_kNpSrGuL-pEfGxaM7JliQ/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--gold)] transition-colors text-[var(--gold)]">Beta Feedback</a></li>
                 <li><a href="#" className="hover:text-[var(--gold)] transition-colors">Privacy Policy</a></li>
               </ul>
             </div>

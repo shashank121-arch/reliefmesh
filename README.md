@@ -113,6 +113,9 @@ We engaged 5 unique users to test our infrastructure.
 ### Live Responses
 [Feedback Response Sheet](https://docs.google.com/spreadsheets/d/1PSzye-wuJ-IERrbvngL_10ZXESR9Wfln2hqRRMXbNpI/edit?gid=176044406#gid=176044406)
 
+### Offline Audit Trail
+[View user_onboarding_responses.csv](./user_onboarding_responses.csv)
+
 ### What We Changed Based on Feedback
 
 | Feedback Received | Change Made | Commit |

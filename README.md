@@ -10,22 +10,15 @@
 
 ---
 
-## 🌐 Live Demo
-**[https://reliefmesh.vercel.app](https://reliefmesh.vercel.app)**
+## 🔗 Quick Links
 
-## 📊 Metrics Dashboard
-**[/dashboard/metrics](https://reliefmesh.vercel.app/dashboard/metrics)**
-
-## 🔒 Security Checklist
-**[/dashboard/security](https://reliefmesh.vercel.app/dashboard/security)**
-
-## 📚 Documentation
-**[/docs](https://reliefmesh.vercel.app/docs)**
-
----
-
-## 🎥 Demo Video
-**[Watch 1-minute Demo Video](https://www.loom.com/share/7f832fe9a4954247b2a7b114cdb57e43)**
+| Resource | Link |
+| :--- | :--- |
+| **🌐 Live Demo** | [reliefmesh.vercel.app](https://reliefmesh.vercel.app) |
+| **🎥 Demo Video** | [Watch 1-minute Demo](https://www.loom.com/share/7f832fe9a4954247b2a7b114cdb57e43) |
+| **📊 Metrics Dashboard** | [View Metrics](https://reliefmesh.vercel.app/dashboard/metrics) |
+| **🔒 Security Checklist**| [View Security](https://reliefmesh.vercel.app/dashboard/security) |
+| **📚 Documentation** | [Read Docs](https://reliefmesh.vercel.app/docs) |
 
 ---
 
@@ -107,6 +100,10 @@ ReliefMesh has been successfully stress-tested by independent testers. This phas
 
 We engaged 30 unique users to test our infrastructure. During this phase, users actively interacted with the application to test wallet connections, navigate the UI, and launch the dashboard.
 
+<details>
+<summary><b>📋 Click to expand the full list of 30 Beta Testers</b></summary>
+<br>
+
 | User Name | User Email | User Wallet Address | Rating | Review |
 | :--- | :--- | :--- | :--- | :--- |
 | **Yash Annadate** | yashannadate2005@gmail.com | [`GBHHRIX...N4SJ`](https://stellar.expert/explorer/testnet/account/GBHHRIX4A4VKB74UCN76EZQI35VFIJ5RIXR3UO2XKUFUSV4JSUAYN4SJ) | 5/5 | its overall good but expand the users.. |
@@ -140,18 +137,17 @@ We engaged 30 unique users to test our infrastructure. During this phase, users 
 | **Sarthak Dhere** | sarthakdhere0217@gmail.com | [`GBFJVTU...5UNH`](https://stellar.expert/explorer/testnet/account/GBFJVTUVOOS5GEPMNEYYQUJG6YNYYYK45OXGHZTUZG3JUVHIEVN45UNH) | 5/5 | nice application |
 | **Shashank Shinde** | poconath121@gmail.com | [`GAL2LXB...OTPM`](https://stellar.expert/explorer/testnet/account/GAL2LXBPTRJGFZQFAYTIWZWP3SGKVLORUXY5T2JKFVYTN6UBMSWXOTPM) | 5/5 | Built and tested the full platform end-to-end. |
 
-## User Feedback Summary
+</details>
 
-### Google Form
-[Product Feedback Google Form](https://docs.google.com/forms/d/e/1FAIpQLSeorizQkfROi-zPbnD7yZMFkUUJ_kNpSrGuL-pEfGxaM7JliQ/viewform?usp=header)
+## 📝 User Feedback Summary
 
-### Live Responses
-[Feedback Response Sheet](https://docs.google.com/spreadsheets/d/1PSzye-wuJ-IERrbvngL_10ZXESR9Wfln2hqRRMXbNpI/edit?gid=176044406#gid=176044406)
+| Resource | Link |
+| :--- | :--- |
+| 📝 **Google Form** | [Product Feedback Google Form](https://docs.google.com/forms/d/e/1FAIpQLSeorizQkfROi-zPbnD7yZMFkUUJ_kNpSrGuL-pEfGxaM7JliQ/viewform?usp=header) |
+| 📈 **Live Responses** | [Feedback Response Sheet](https://docs.google.com/spreadsheets/d/1PSzye-wuJ-IERrbvngL_10ZXESR9Wfln2hqRRMXbNpI/edit?gid=176044406#gid=176044406) |
+| 💾 **Offline Audit Trail** | [View user_onboarding_responses.csv](./user_onboarding_responses.csv) |
 
-### Offline Audit Trail
-[View user_onboarding_responses.csv](./user_onboarding_responses.csv)
-
-### What We Changed Based on Feedback
+### 🔄 What We Changed Based on Feedback
 
 | Feedback Received | Change Made | Commit |
 |---|---|---|

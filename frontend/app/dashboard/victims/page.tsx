@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Lock, Search, PlusCircle, Loader2, ExternalLink, CheckCircle } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
 import { invokeContract, queryContract } from '@/lib/stellar';
+import { monitor } from '@/lib/monitoring';
 
 async function hashData(data: string) {
   const encoder = new TextEncoder();
@@ -93,6 +94,7 @@ export default function VictimsPage() {
       if (result.success) {
         setTxHash(result.hash);
         setSuccess(true);
+        monitor.victimRegistered(disaster);
         // Reset form
         setPhone('');
         setNationalId('');

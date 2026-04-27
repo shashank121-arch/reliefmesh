@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Store, AlertTriangle, CheckCircle, PlusCircle, Loader2, ExternalLink } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
 import { invokeContract, queryContract } from '@/lib/stellar';
+import { monitor } from '@/lib/monitoring';
 
 export default function ShopkeepersPage() {
   const { publicKey, signTransaction } = useWallet();
@@ -134,6 +135,7 @@ export default function ShopkeepersPage() {
           setTxHash(result.hash);
           setSuccessAction('add');
           setIsAddModalOpen(false);
+          monitor.shopkeeperRegistered(newSkLocation);
           // Wait briefly for ledger close then fetch
           setTimeout(() => fetchShopkeepers(), 1000);
        }

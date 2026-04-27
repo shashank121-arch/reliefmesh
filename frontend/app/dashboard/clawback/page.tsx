@@ -4,6 +4,7 @@ import { AlertTriangle, ShieldCheck, Zap, Loader2, CheckCircle, ArrowRight, Clip
 import { useWallet } from '@/context/WalletContext';
 import { invokeContract, queryContract } from '@/lib/stellar';
 import { Address } from '@stellar/stellar-sdk';
+import { monitor } from '@/lib/monitoring';
 import { TableRowSkeleton } from '@/components/ui/skeleton';
 
 export default function ClawbackPage() {
@@ -123,6 +124,7 @@ export default function ClawbackPage() {
       if (result.success) {
         setTxHash(result.hash);
         setStep(4);
+        monitor.clawbackExecuted(Number(amount), shopkeeperId);
         fetchStats();
       }
     } catch (err) {

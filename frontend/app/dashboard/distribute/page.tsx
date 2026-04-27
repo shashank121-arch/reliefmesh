@@ -4,6 +4,8 @@ import { CheckCircle, Upload, ArrowRight, Loader2 } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
 import { invokeContract } from '@/lib/stellar';
 import { Address } from '@stellar/stellar-sdk';
+import { monitor } from '@/lib/monitoring';
+import { isGaslessEnabled } from '@/lib/feeBump';
 
 export default function DistributeAid() {
   const { publicKey, signTransaction } = useWallet();
@@ -60,6 +62,7 @@ export default function DistributeAid() {
       if (result.success) {
         setTxHash(result.hash);
         setSuccess(true);
+        monitor.aidDistributed(Number(amount), 1, disaster);
       }
     } catch (err: any) {
       console.error(err);
@@ -183,7 +186,7 @@ export default function DistributeAid() {
                 <div className="toggle-switch active"></div>
              </div>
 
-             <div className="border border-[var(--border-gold)] bg-[rgba(167,139,113,0.05)] rounded-xl p-6">
+             <div className="border border-[var(--border-gold)] bg-[rgba(167,139,113,0.05)] rounded-xl p-6 mb-6">
                <div className="label-text mb-4 text-center">Distribution Preview</div>
                <div className="flex justify-between items-center py-2 border-b border-[var(--border-subtle)]">
                  <span className="text-gray-400">Recipient ID</span>
@@ -198,6 +201,46 @@ export default function DistributeAid() {
                  <span className="font-display italic text-2xl text-[var(--gold)]">${parseFloat(amount || '0').toFixed(2)}</span>
                </div>
              </div>
+
+             {isGaslessEnabled() && (
+               <div style={{
+                 display: 'flex',
+                 alignItems: 'center',
+                 gap: '12px',
+                 padding: '14px 16px',
+                 borderRadius: '12px',
+                 background: 'rgba(167,139,113,0.08)',
+                 border: '1px solid rgba(167,139,113,0.2)',
+                 marginBottom: '16px'
+               }}>
+                 <span style={{ fontSize: '20px' }}>⚡</span>
+                 <div style={{ flex: 1 }}>
+                   <p style={{
+                     color: 'white', fontSize: '14px',
+                     fontWeight: 500, margin: 0
+                   }}>
+                     Gasless Transaction
+                   </p>
+                   <p style={{
+                     color: 'rgba(255,255,255,0.4)',
+                     fontSize: '12px', margin: 0
+                   }}>
+                     ReliefMesh covers the Stellar network fee.
+                     You need zero XLM.
+                   </p>
+                 </div>
+                 <span style={{
+                   background: '#a78b71',
+                   color: '#0a0a0a',
+                   fontSize: '11px',
+                   fontWeight: 700,
+                   padding: '3px 12px',
+                   borderRadius: '100px'
+                 }}>
+                   FREE
+                 </span>
+               </div>
+             )}
 
              <button 
                 type="submit" 

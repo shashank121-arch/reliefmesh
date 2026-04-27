@@ -8,6 +8,7 @@ import {
   ReactNode
 } from 'react'
 import { toast } from 'sonner'
+import { monitor } from '@/lib/monitoring'
 
 interface WalletState {
   publicKey: string | null
@@ -149,6 +150,8 @@ export function WalletProvider({
         setState(s => ({ ...s, isLoading: false }))
         return
       }
+
+      monitor.userConnected(publicKey)
       
       // Fetch balances
       const { xlm, usdc } = await fetchBalances(

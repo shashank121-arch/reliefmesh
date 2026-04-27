@@ -4,6 +4,7 @@ import { DollarSign, ExternalLink, ArrowRight, Loader2, CheckCircle, AlertTriang
 import { useWallet } from '@/context/WalletContext';
 import { invokeContract, queryContract } from '@/lib/stellar';
 import { Address } from '@stellar/stellar-sdk';
+import { monitor } from '@/lib/monitoring';
 
 export default function FundPoolPage() {
   const { publicKey, signTransaction, usdcBalance, refreshBalance } = useWallet();
@@ -64,6 +65,7 @@ export default function FundPoolPage() {
       if (result.success) {
         setTxHash(result.hash);
         setSuccess(true);
+        monitor.poolFunded(Number(amount), disaster);
         refreshBalance();
       }
     } catch (err: any) {

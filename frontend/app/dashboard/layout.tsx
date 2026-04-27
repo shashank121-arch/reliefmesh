@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Globe, Users, Store, Zap, Settings, MessageSquare, DollarSign } from 'lucide-react';
+import { LayoutDashboard, Globe, Users, Store, Zap, Settings, MessageSquare, DollarSign, BarChart2, Shield, BookOpen } from 'lucide-react';
 import { WalletConnect } from '@/components/ui/WalletConnect';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
@@ -22,6 +22,9 @@ export default function DashboardLayout({
     { href: "/dashboard/victims", icon: Users, label: "Victims" },
     { href: "/dashboard/shopkeepers", icon: Store, label: "Shopkeepers" },
     { href: "/dashboard/clawback", icon: Zap, label: "Clawback" },
+    { href: "/dashboard/metrics", icon: BarChart2, label: "Metrics" },
+    { href: "/dashboard/security", icon: Shield, label: "Security" },
+    { href: "/docs", icon: BookOpen, label: "Docs" },
     { href: "/dashboard/settings", icon: Settings, label: "Settings" },
     { href: "/feedback", icon: MessageSquare, label: "Feedback" },
   ];

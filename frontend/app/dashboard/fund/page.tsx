@@ -65,7 +65,7 @@ export default function FundPoolPage() {
       if (result.success) {
         setTxHash(result.hash);
         setSuccess(true);
-        monitor.poolFunded(Number(amount), disaster);
+        monitor.poolFunded(Number(amount));
         refreshBalance();
       }
     } catch (err: any) {
